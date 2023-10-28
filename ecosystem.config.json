@@ -1,0 +1,16 @@
+{
+    "apps": [
+        {
+            "name": "trietix-server",
+            "script": "lib/index.js",
+            "node_args": "",
+            "instances": 4,
+            "autorestart": true,
+            "watch": false,
+            "time": true,
+            "env": {
+                "NODE_ENV": "development"
+            }
+        }
+    ]
+}

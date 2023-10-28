@@ -1,0 +1,42 @@
+name: Auto Label Issues
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+
+jobs:
+  auto_label:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check for feature request
+        id: check_feature_request
+        run: |
+          body_contains_feature=$(echo "${{ github.event.issue.body }}" | grep -iE 'feature request')
+          title_contains_feature=$(echo "${{ github.event.issue.title }}" | grep -iE 'feature request')
+          
+          if [[ -n "$body_contains_feature" || -n "$title_contains_feature" ]]; then
+            echo "::set-output name=is_feature_request::true"
+          else
+            echo "::set-output name=is_feature_request::false"
+          fi
+
+      - name: Check for bug
+        id: check_bug
+        run: |
+          body_contains_bug=$(echo "${{ github.event.issue.body }}" | grep -iE 'bug report')
+          title_contains_bug=$(echo "${{ github.event.issue.title }}" | grep -iE 'bug report')
+          
+          if [[ -n "$body_contains_bug" || -n "$title_contains_bug" ]]; then
+            echo "::set-output name=is_bug::true"
+          else
+            echo "::set-output name=is_bug::false"
+          fi
+
+      - name: Label the issue
+        uses: actions/labeler@v4
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml

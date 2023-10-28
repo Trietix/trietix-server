@@ -1,0 +1,9 @@
+
+
+PosT http://localhost:5000/api/v1/auth/login
+content-type: application/json
+
+{
+    "email": "emmanuelomoiya6@gmail.com",
+    "password": "Emmanuel1"
+}
