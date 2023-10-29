@@ -14,6 +14,7 @@ export interface IEvent {
     organizer: string;
     image: string;
     socials: string[];
+    started: boolean;
     checkedIn: string[];
     category: string[];
 }

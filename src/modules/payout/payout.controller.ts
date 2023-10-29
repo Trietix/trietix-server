@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 import ApiError from '../errors/ApiError';
-import { sendMail } from '../utils/sendMail'; 
 import * as PayoutService from './payout.service';
 import { eventService } from '../event';
 import { userService } from '../user';
@@ -10,10 +9,6 @@ import mongoose from 'mongoose';
 
 export const createPayout =  catchAsync(async (req: Request, res: Response) => {
     const Payout = await PayoutService.createPayout(req.body);
-    const event = await eventService.getEventById(req.body.eventId);
-    const user = await userService.getUserById(req.body?.organizerId as any)
-    sendMail(user?.email as any, `You've requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "organizer/payout.hbs")
-    sendMail("trietixhq@gmail.com", `${user?.name} requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "guru/payout.hbs")
     res.status(httpStatus.CREATED).send(Payout);
 });
 

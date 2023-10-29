@@ -53,6 +53,9 @@ export class Event {
     socials: string[] = [''];
 
     @prop({ trim: true })
+    started: boolean = false;
+
+    @prop({ trim: true })
     checkedIn: string[] = [''];
 
     @prop({ required: true, trim: true })

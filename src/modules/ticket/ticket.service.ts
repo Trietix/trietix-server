@@ -88,7 +88,11 @@ export const getTicketsByUser = async(userId: mongoose.Types.ObjectId): Promise<
 export const getTicketByTransactionId = async(transactionId: string): Promise<any | null> => {
     const ticket = await ticketModel.findOne({ ticketId: transactionId }) as any;
     const event = await eventModel.findById(ticket?.event as any);
-    return [ticket, event];
+    if(!ticket){
+        throw new ApiError(httpStatus.NOT_FOUND, "Ticket not Found")
+    } else {
+        return [ticket, event];
+    }
 }
 
 /**

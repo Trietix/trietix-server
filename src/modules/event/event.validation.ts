@@ -19,6 +19,7 @@ const createEventBody: Record<keyof NewCreatedEvent, any> = {
     socials: Joi.array(),
     checkedIn: Joi.array(),
     category: Joi.array(),
+    started: Joi.boolean()
 };
   
 export const createEvent = {

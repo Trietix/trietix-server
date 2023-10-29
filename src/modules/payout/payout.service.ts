@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 import { ApiError } from '../errors';
 import httpStatus from 'http-status';
 import { NewCreatedPayout, UpdatePayoutBody, IPayoutDoc } from './payout.interface';
-import { userModel, userInterfaces } from '../user';
-import { eventModel } from '../event';
+import { userModel, userInterfaces, userService } from '../user';
+import { eventModel, eventService } from '../event';
 import payoutModel from './payout.model';
+import { sendMail } from '../utils/sendMail'; 
 
 
 /**
@@ -21,14 +22,11 @@ export const createPayout = async (PayoutBody: NewCreatedPayout): Promise<any | 
     hour12: true
   })}`)
     } else {
-        const user = await userModel.findById(PayoutBody.organizerId) as any;
-        console.log(user)
-
-        // if(!user){
-        //     throw new ApiError(httpStatus.NOT_FOUND, "Organizer not found")
-        // } else {
-        // }
         const Payout = await payoutModel.create(PayoutBody);
+        const event = await eventService.getEventById(PayoutBody.eventId);
+        const user = await userService.getUserById(PayoutBody.organizerId as any)
+        sendMail(user?.email as any, `You've requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "organizer/payout.hbs")
+        sendMail("trietixhq@gmail.com", `${user?.name} requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "guru/payout.hbs")
         return Payout;
     }
 }
