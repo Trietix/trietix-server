@@ -48,6 +48,27 @@ export const getTicketsByOrganizer = async (organizerId: mongoose.Types.ObjectId
 }
 
 /**
+ * Get the revenue for a particular organizerId
+ * @param {mongoose.Types.ObjectId} organizerId
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getRevenueByOrganizer = async (organizerId: mongoose.Types.ObjectId):Promise<any> => {
+    const events = await eventModel.find({ organizer: organizerId });
+    const ticketsRevenue = [];
+    for(const event of events){
+        const tickets = await ticketModel.find({ event: event.id }) as any;
+        for(const ticket of tickets){
+            let moneyMade = (ticket.amount * ticket.price) - (250 * ticket.amount);
+            let dateCreated = new Date(ticket.createdAt).toISOString().slice(0, 10);
+            ticketsRevenue.push({moneyMade, dateCreated});
+        } 
+    }
+    return ticketsRevenue; 
+}
+
+
+
+/**
  * Get all the tickets for a particular price
  * @param {mongoose.Types.ObjectId} price
  * @returns {Promise<ICommandDoc | null>}

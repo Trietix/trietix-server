@@ -15,6 +15,10 @@ router
     .get(auth(), validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
 
 router
+    .route('/organizer/revenue/:organizer')
+    .get(auth(), validate(ticketValidation.getRevenueByOrganizer), ticketController.getRevenueByOrganizer)
+
+router
     .route('/user/:userId')
     .get(auth(), validate(ticketValidation.getTicketsByUser), ticketController.getTicketsByUser)
     

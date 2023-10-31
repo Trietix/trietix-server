@@ -22,8 +22,8 @@ export const createPayout = async (PayoutBody: NewCreatedPayout): Promise<any | 
     hour12: true
   })}`)
     } else {
-        const Payout = await payoutModel.create(PayoutBody);
-        const event = await eventService.getEventById(PayoutBody.eventId);
+        const Payout = await payoutModel.create(PayoutBody) as any;
+        const event = await eventService.getEventById(PayoutBody.eventId as any);
         const user = await userService.getUserById(PayoutBody.organizerId as any)
         sendMail(user?.email as any, `You've requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "organizer/payout.hbs")
         sendMail("trietixhq@gmail.com", `${user?.name} requested Payout for ${event?.title} - Trietix`, { eventName: event?.title, organizerName: user?.name, accountName: user?.accountName, accountBank: user?.bank, payoutTime: Payout?.createdAt }, "guru/payout.hbs")

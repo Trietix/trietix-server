@@ -56,7 +56,7 @@ app.use(compression());
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
-updateEvent();
+// updateEvent();
 
 // limit repeated failed requests to auth endpoints 
 if (config.env === 'production') {

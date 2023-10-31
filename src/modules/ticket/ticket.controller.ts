@@ -37,6 +37,16 @@ export const getTicketsByOrganizer = catchAsync(async (req: Request, res: Respon
   }
 });
 
+export const getRevenueByOrganizer = catchAsync(async (req: Request, res: Response) => {
+  if (typeof req.params['organizer'] === 'string') {
+    const revenue = await ticketService.getRevenueByOrganizer(new mongoose.Types.ObjectId(req.params['organizer']));
+    if (!revenue) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'No revenue');
+    }
+    res.send(revenue);
+  }
+});
+
 export const getTicketsByUser = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['userId'] === 'string') {
     const ticket = await ticketService.getTicketsByUser(new mongoose.Types.ObjectId(req.params['userId']));

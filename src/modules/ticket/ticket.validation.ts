@@ -53,6 +53,12 @@ export const getTicketsByOrganizer = {
     }),
 }
 
+export const getRevenueByOrganizer = {
+    params: Joi.object().keys({
+        organizer: Joi.string(),
+    }),
+}
+
 export const getTicketsByUser = {
     params: Joi.object().keys({
         userId: Joi.string().custom(objectId),
