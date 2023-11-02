@@ -18,8 +18,10 @@ export const createInvite = async (inviteBody: NewCreatedInvite): Promise<IInvit
         throw new ApiError(httpStatus.FORBIDDEN, "Invite already exists")
     } else {
         const user = await userModel.findOne({ email: inviteBody.email }) as any;
-        const event = await eventModel.findById(inviteBody.eventId); 
-        if(!user){
+        const event = await eventModel.findById(inviteBody.eventId) as any; 
+        if(event.isEnded === true){
+            throw new ApiError(httpStatus.FORBIDDEN, "You can't invite anyone since your event has ended")
+        } else if(!user){
             throw new ApiError(httpStatus.NOT_FOUND, "User not found")
         } else if(user?.role === "organizer" || user?.role === "admin"){
             throw new ApiError(httpStatus.FORBIDDEN, "You can't invite this user")

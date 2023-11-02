@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config/config';
+import { updateEvent } from './modules/utils';
 import logger from './modules/logger/logger';
 
 let server: any;
@@ -10,6 +11,7 @@ const connectToDB = async() => {
       logger.info('Connected to MongoDB...');
       server = app.listen(config.port, () => {
         logger.info(`Server listening on port ${config.port}`);
+        updateEvent()
       });
     });
   } catch(error: any){

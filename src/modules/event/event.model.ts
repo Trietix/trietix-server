@@ -26,7 +26,10 @@ export class Event {
     venue: string = '';
 
     @prop({ required: true, trim: true })
-    time: string = '';
+    startTime: string = '';
+    
+    @prop({ required: true, trim: true })
+    endTime: string = '';
 
     @prop()
     invites: string[] = [''];
@@ -53,7 +56,13 @@ export class Event {
     socials: string[] = [''];
 
     @prop({ trim: true })
-    started: boolean = false;
+    isStarted: boolean = false;
+
+    @prop({ trim: true })
+    isEnded: boolean = false;
+
+    @prop({ trim: true })
+    isCancelled: boolean = false;
 
     @prop({ trim: true })
     checkedIn: string[] = [''];

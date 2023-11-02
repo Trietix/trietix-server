@@ -278,6 +278,8 @@ export const deleteEventById = async (eventId: mongoose.Types.ObjectId): Promise
         throw new ApiError(httpStatus.NOT_FOUND, 'Event not found');
     }
     const user = await userModel.findById(event.organizer);
+    await ticketModel.deleteMany({ event: event._id })
+    await inviteModel.deleteMany({ eventId: event._id })
 
     if(user?.eventsAttended.includes(eventId)){
         user?.eventsAttended.splice(user?.eventsAttended.indexOf(eventId), 1);
@@ -300,6 +302,8 @@ export const deleteEventByName = async (eventTitle: string): Promise<IEventDoc |
         throw new ApiError(httpStatus.NOT_FOUND, 'Event not found');
     }
     const user = await userModel.findById(event.organizer);
+    await ticketModel.deleteMany({ event: event._id })
+    await inviteModel.deleteMany({ eventId: event._id })
 
     if(user?.eventsAttended.includes(event.id)){
         user?.eventsAttended.splice(user?.eventsAttended.indexOf(event.id), 1);

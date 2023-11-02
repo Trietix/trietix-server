@@ -8,7 +8,8 @@ const createEventBody: Record<keyof NewCreatedEvent, any> = {
     color: Joi.string(),
     description: Joi.string(),
     venue: Joi.string(),
-    time: Joi.string(),
+    startTime: Joi.string(),
+    endTime: Joi.string(),
     price: Joi.number(),
     invites: Joi.array(),
     date: Joi.string(),
@@ -19,7 +20,9 @@ const createEventBody: Record<keyof NewCreatedEvent, any> = {
     socials: Joi.array(),
     checkedIn: Joi.array(),
     category: Joi.array(),
-    started: Joi.boolean()
+    isStarted: Joi.boolean(),
+    isEnded: Joi.boolean(),
+    isCancelled: Joi.boolean()
 };
   
 export const createEvent = {

@@ -6,7 +6,8 @@ export interface IEvent {
     color: string;
     venue: string;
     price: number;
-    time: string;
+    startTime: string;
+    endTime: string;
     invites: string[],
     date: string;
     processingFee: number;
@@ -14,7 +15,9 @@ export interface IEvent {
     organizer: string;
     image: string;
     socials: string[];
-    started: boolean;
+    isStarted: boolean;
+    isEnded: boolean;
+    isCancelled: boolean;
     checkedIn: string[];
     category: string[];
 }

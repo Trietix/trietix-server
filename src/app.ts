@@ -12,7 +12,6 @@ import { jwtStrategy } from './modules/auth';
 import { authLimiter } from './modules/utils';
 import { ApiError, errorConverter, errorHandler } from './modules/errors';
 import routes from './routes/v1';
-import { updateEvent } from './modules/utils';
 
 const app: Express = express();
 
@@ -56,7 +55,6 @@ app.use(compression());
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
-// updateEvent();
 
 // limit repeated failed requests to auth endpoints 
 if (config.env === 'production') {
