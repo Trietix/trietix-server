@@ -8,7 +8,7 @@ import { sendMail } from '../utils/sendMail';
 
 export const createTicket =  catchAsync(async (req: Request, res: Response) => {
     const ticket = await ticketService.createTicket(req.body);
-    sendMail(req.body.email, `Ticket purchase successful [${req.body.ticketId}] - Trietix`, { amount: req.body.amount, url:`https://trietix.vercel.app/ticket/${req.body.ticketId}`}, "user/ticket.hbs");
+    sendMail(req.body.email, `Ticket purchase successful [${req.body.ticketId}] - Trietix`, { amount: req.body.amount, url:`https://trietix.com/ticket/${req.body.ticketId}`}, "user/ticket.hbs");
     res.status(httpStatus.CREATED).send(ticket);
 });
 

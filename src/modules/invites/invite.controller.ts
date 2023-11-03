@@ -12,7 +12,7 @@ export const createInvite =  catchAsync(async (req: Request, res: Response) => {
     const invite = await inviteService.createInvite(req.body);
     const event = await eventService.getEventById(req.body.eventId);
     const user = await userService.getUserById(event?.organizer as any)
-    sendMail(req.body.email, "You've been invited as a volunteer - Trietix", { oraganizer: user?.name, eventTitle: event?.title, eventVenue: event?.venue, eventDate: event?.date, eventLocation: event?.location, eventTime: event?.startTime, url: `https://trietix.vercel.app/invites/${invite?.id}` }, "user/invite.hbs")
+    sendMail(req.body.email, "You've been invited as a volunteer - Trietix", { oraganizer: user?.name, eventTitle: event?.title, eventVenue: event?.venue, eventDate: event?.date, eventLocation: event?.location, eventTime: event?.startTime, url: `https://trietix.com/invite/${invite?.id}` }, "user/invite.hbs")
     res.status(httpStatus.CREATED).send(invite);
 });
 
