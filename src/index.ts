@@ -3,6 +3,7 @@ import app from './app';
 import config from './config/config';
 import { updateEvent } from './modules/utils';
 import logger from './modules/logger/logger';
+import axios from 'axios';
 
 let server: any;
 const connectToDB = async() => {
@@ -21,6 +22,13 @@ const connectToDB = async() => {
 }
 
 connectToDB();
+
+setInterval(()=>{
+  console.log('Initiating scheduling...');
+  axios.get(`https://api.trietix.com/api/v1`)
+    .then((res)=> console.log(`Pinged: ${res.status}`))
+    .catch((err)=> console.log(`Error pinging server: ${err}`))
+}, 10*60*1000)
 
 const exitHandler = () => {
   if (server) {

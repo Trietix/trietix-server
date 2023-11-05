@@ -71,10 +71,10 @@ export const updateUser = {
   }),
   body: Joi.object()
     .keys({
-      password: Joi.string().required().custom(password),
+      password: Joi.string().custom(password),
       username: Joi.string(),
-      name: Joi.string().required(),
-      email: Joi.string().required().email(),
+      name: Joi.string(),
+      email: Joi.string().email(),
       photo: Joi.string(),
     })
     .min(1),
