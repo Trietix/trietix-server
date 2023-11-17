@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { ApiError } from '../errors';
 import httpStatus from 'http-status';
 import { NewCreatedEvent, UpdateEventBody, IEventDoc } from './event.interface';
-import { userModel } from '../user';
+import { userModel, userService } from '../user';
 import { inviteModel } from '../invites';
 import eventModel from './event.model';
 import { ticketModel } from '../ticket';
@@ -22,12 +22,9 @@ export const createEvent = async (eventBody: NewCreatedEvent): Promise<IEventDoc
     }
     const event = await eventModel.create(eventBody)
     const user = await userModel.findById(eventBody.organizer)
-
-    if(!user?.events.includes(event?.id)){
-        user?.events.push(event?.id)
+    if(user){
+        user.events.push(event.id)
         await user?.save();
-    } else {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Event already exists');
     }
     return event;
 }
@@ -37,12 +34,23 @@ export const createEvent = async (eventBody: NewCreatedEvent): Promise<IEventDoc
  * @returns {Promise<IEventDoc | null>}
  */
 export const getEvents = async ():Promise<any> => {
-    const events = await eventModel.find();
+    const events = await eventModel.find({ isEnded: false });
     if(!events){
         throw new ApiError(httpStatus.NOT_FOUND, 'No event available')
     }
     return events; 
 }
+
+/**
+ * Get the event by title
+ * @param {string} eventTitle 
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getEvent = async (eventTitle: string): Promise<any> => {
+    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
+    return event;
+}
+
 
 /**
  * Get all the invites
@@ -88,11 +96,16 @@ export const getRecentEvents = async ():Promise<any> => {
  * @returns {Promise<ICommandDoc | null>}
  */
 export const getEventsByOrganizer = async (organizerId: mongoose.Types.ObjectId):Promise<any> => {
-    const events = await eventModel.find({ organizer: organizerId });
-    if(!events){
-        throw new ApiError(httpStatus.NOT_FOUND, 'No events available')
+    const user = await userModel.findOne({ _id: organizerId });
+    if(user){
+        const events = await eventModel.find({ organizer: organizerId });
+        if(!events){
+            throw new ApiError(httpStatus.NOT_FOUND, 'No events available')
+        }
+        return events; 
+    } else {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Organizer not found')
     }
-    return events; 
 }
 
 /**
@@ -109,6 +122,53 @@ export const getTopEventsByOrganizer = async (organizerId: mongoose.Types.Object
 }
 
 /**
+ * Get the event for a particular organizer
+ * @param {string} eventTitle 
+ * @param {mongoose.Types.ObjectId} organizerId
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getEventByOrganizer = async (eventTitle: string, organizerId: mongoose.Types.ObjectId): Promise<any> => {
+    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' '), organizer: organizerId });
+    return event;
+}
+
+/**
+ * Get the tickets for a particular organizer
+ * @param {mongoose.Types.ObjectId} organizerId
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getTicketsByOrganizer = async (organizerId: mongoose.Types.ObjectId): Promise<any> => {
+    const events = await getEventsByOrganizer(organizerId);
+    const tickets = events.map(async(event: any) => await ticketModel.find({ event: event }))
+    return tickets;
+}
+
+/**
+ * Get the event tickets for a particular organizer
+ * @param {string} eventTitle
+ * @param {mongoose.Types.ObjectId} organizerId
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getEventTicketsByOrganizer = async (eventTitle: string, organizerId: mongoose.Types.ObjectId): Promise<any> => {
+    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' '), organizer: organizerId });
+    console.log(event)
+    const tickets = await ticketModel.find({ event: event?._id });
+    return tickets;
+}
+
+/**
+ * Get the event volunteers for a particular organizer
+ * @param {string} eventTitle
+ * @param {mongoose.Types.ObjectId} organizerId
+ * @returns {Promise<ICommandDoc | null>}
+ */
+export const getEventVolunteersByOrganizer = async (eventTitle: string, organizerId: mongoose.Types.ObjectId): Promise<any> => {
+    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' '), organizer: organizerId });
+    const volunteers = await inviteModel.find({ eventId: event?._id });
+    return volunteers;
+}
+
+/**
  * Get all the recent events for a particular organizer
  * @param {mongoose.Types.ObjectId} organizerId
  * @returns {Promise<ICommandDoc | null>}
@@ -120,49 +180,6 @@ export const getRecentEventsByOrganizer = async (organizerId: mongoose.Types.Obj
     }
     return events; 
 }
-
-/**
- * Get the all event analytics for a particular organizer
- * @param {mongoose.Types.ObjectId} organizerId
- * @returns {Promise<ICommandDoc | null>}
- */
-export const getEventAnalyticsByOrganizer = async (organizerId: mongoose.Types.ObjectId):Promise<any> => {
-    const events = await eventModel.find({ organizer: organizerId });
-    if(!events){
-        throw new ApiError(httpStatus.NOT_FOUND, 'No events available');
-    }
-    try {
-        const eventsPerMonth = await eventModel.aggregate([
-            {
-                $match: { organizer: new mongoose.Types.ObjectId(organizerId) }
-            },
-            {
-                $group: {
-                    _id: {
-                        year: { $year: "$date" },
-                        month: { $month: "$date" }
-                    },
-                    count: { $sum: 1 }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    year: "$_id.year",
-                    month: "$_id.month",
-                    count: 1
-                }
-            },
-            {
-                $sort: { year: 1, month: 1 }
-            }
-        ]);
-        return eventsPerMonth;
-    } catch(err){
-        return err;
-    }
-}
-
 
 /**
  * Get Event by Id
@@ -182,49 +199,15 @@ export const getEventById = async(eventId: mongoose.Types.ObjectId): Promise<IEv
 export const getEventByTitle = async(eventTitle: string): Promise<IEventDoc | null> => {
     const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
     return event;
-}
+};
 
 /**
- * Get Events tickets
- * @param {string} eventTitle
- * @returns {Promise<ITicketDoc | null>}
+ * Get Recent Event By Top Organizer
  */
-export const getEventTickets = async(eventTitle: string): Promise<any> => {
-    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
-    const tickets = await ticketModel.find({ event: event?._id });
-    return tickets;
-}
-
-/**
- * Get Events volunteers
- * @param {string} eventTitle
- * @returns {Promise<IInviteDoc | null>}
- */
-export const getEventVolunteers = async(eventTitle: string): Promise<any> => {
-    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
-    const volunteers = await inviteModel.find({ eventId: event?._id });
-    return volunteers;
-}
-
-
-/**
- * Get Events by Price
- * @param {number} eventPrice
- * @returns {Promise<IEventDoc | null>}
- */
-export const getEventsByPrice = async(eventPrice: any): Promise<IEventDoc[] | any> => {
-    const events = await eventModel.find({ price: eventPrice })
-    return events;
-}
-
-/**
- * Get Events by Category
- * @param {number} eventCategory
- * @returns {Promise<IEventDoc | null>}
- */
-export const getEventsByCategory = async(eventCategory: any): Promise<IEventDoc[] | any> => {
-    const events = await eventModel.find({ category: eventCategory })
-    return events;
+export const getRecentEventByTopOrganizer = async(): Promise<any>=> {
+    const organizer = await userModel.find({ role: 'organizer' }).sort({ events: -1 }).limit(3) as any;
+    const recentEvent = await eventModel.find({ organizer: organizer[0]._id, isEnded: true }).sort({ createdAt: -1 });
+    return recentEvent[0];
 }
 
 
@@ -246,7 +229,6 @@ export const updateEventById = async(eventId: mongoose.Types.ObjectId, updateBod
     await event.save();
     return event;
 }
-
 
 /**
  * Update a event by name

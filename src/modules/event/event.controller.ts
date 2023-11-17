@@ -55,17 +55,6 @@ export const getInvitesByEvent = catchAsync(async (req: Request, res: Response)=
   res.status(httpStatus.OK).send(invites);
 })
 
-export const getTopEvents = catchAsync(async (req: Request, res: Response)=>{
-  const  events = await eventService.getRecentEvents();
-  res.status(httpStatus.OK).send(events);
-})
-
-export const getRecentEvents = catchAsync(async (req: Request, res: Response)=>{
-  const  events = await eventService.getTopEvents();
-  res.status(httpStatus.OK).send(events);
-})
-
-
 export const getEventsByOrganizer = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['organizer'] === 'string') {
     const event = await eventService.getEventsByOrganizer(new mongoose.Types.ObjectId(req.params['organizer']));
@@ -76,15 +65,10 @@ export const getEventsByOrganizer = catchAsync(async (req: Request, res: Respons
   }
 });
 
-export const getRecentEventsByOrganizer = catchAsync(async (req: Request, res: Response) => {
-  if (typeof req.params['organizer'] === 'string') {
-    const event = await eventService.getRecentEventsByOrganizer(new mongoose.Types.ObjectId(req.params['organizer']));
-    if (!event) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'No events found');
-    }
-    res.send(event);
-  }
-});
+export const getRecentEventByTopOrganizer = catchAsync(async(req: Request, res: Response)=>{
+  const event = await eventService.getRecentEventByTopOrganizer();
+  res.status(httpStatus.OK).send(event);
+})
 
 export const getTopEventsByOrganizer = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['organizer'] === 'string') {
@@ -96,9 +80,9 @@ export const getTopEventsByOrganizer = catchAsync(async (req: Request, res: Resp
   }
 });
 
-export const getEventByTitle = catchAsync(async (req: Request, res: Response) => {
+export const getEventByOrganizer = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['title'] === 'string') {
-    const event = await eventService.getEventByTitle(req.params['title']);
+    const event = await eventService.getEventByOrganizer(req.params['title'], req.params['organizer'] as any);
     if (!event) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Event not found');
     }
@@ -106,44 +90,36 @@ export const getEventByTitle = catchAsync(async (req: Request, res: Response) =>
   }
 });
 
-export const getEventTickets = catchAsync(async (req: Request, res: Response) => {
+export const getEventTicketsByOrganizer = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['title'] === 'string') {
-    const event = await eventService.getEventTickets(req.params['title']);
-    if (!event) {
+    const tickets = await eventService.getEventTicketsByOrganizer(req.params['title'], req.params['organizer'] as any);
+    if (!tickets) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Tickets not found');
     }
-    res.send(event);
+    res.send(tickets);
   }
 });
 
-export const getEventsByPrice = catchAsync(async (req: Request, res: Response) => {
-      const events = await eventService.getEventsByPrice(req.params['eventPrice']);
-    if (!events) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Events not found');
-    }
-      res.send(events);
-    }
-);
-
-export const getEventVolunteers = catchAsync(async (req: Request, res: Response) => {
+export const getEventVolunteersByOrganizer = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['title'] === 'string') {
-      const events = await eventService.getEventVolunteers(req.params['title']);
-    if (!events) {
+      const volunteers = await eventService.getEventVolunteersByOrganizer(req.params['title'], req.params['organizer'] as any);
+    if (!volunteers) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Volunteers not found');
     }
-      res.send(events);
+      res.send(volunteers);
     }
   }
 );
 
-export const getEventsByCategory = catchAsync(async (req: Request, res: Response) => {
-      const events = await eventService.getEventsByCategory(req.params['eventCategory']);
-    if (!events) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Events not found');
+export const getEventByTitle = catchAsync(async (req: Request, res: Response)=>{
+  if (typeof req.params['title'] === 'string') {
+      const event = await eventService.getEvent(req.params['title']);
+      if (!event) {
+          throw new ApiError(httpStatus.NOT_FOUND, 'Event not found');
+      }
+      res.send(event);
     }
-      res.send(events);
-    }
-);
+})
   
 export const updateEvent = catchAsync(async (req: Request, res: Response) => {
     if (typeof req.params['eventId'] === 'string') {

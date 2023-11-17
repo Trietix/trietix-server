@@ -100,6 +100,15 @@ export const getTopOrganizers = async(): Promise<IUserDoc[] | null> =>{
 };
 
 /**
+ * Get top organizer
+ * @returns {Promis<IUserDoc| null>}
+ */
+export const getTopOrganizer = async(): Promise<IUserDoc[] | null> =>{
+  const user = await userModel.find({ role: 'organizer' }).sort({ events: -1 }).limit(1);
+  return user;
+};
+
+/**
  * Get recent organizers
  * @returns {Promis<IUserDoc[] | null>}
  */

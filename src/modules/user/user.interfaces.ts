@@ -18,7 +18,7 @@ export interface IUser {
   accountNumber: number;
   accountName: string;
   bank: string;
-  isVerified: boolean;
+  isVerified: boolean | "pending";
 }
 
 export interface IUserDoc extends IUser, Document {

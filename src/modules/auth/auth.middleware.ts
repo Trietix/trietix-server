@@ -16,6 +16,7 @@ const verifyCallback =
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
     }
     req.user = user;
+    console.log(req.user)
     resolve();
   };
 
@@ -23,7 +24,6 @@ const authMiddleware =
   (...requiredRights: string[]) =>
   async (req: Request, res: Response, next: NextFunction) =>
     new Promise<void>((resolve, reject) => {
-      // config.jwt.secret
       if(req.headers.authorization?.replace("Bearer", "") as string){
         let token = req?.headers?.authorization?.replace("Bearer ", "") as string;
         if(token){

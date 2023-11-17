@@ -29,7 +29,7 @@ export const createEvent = {
     body: Joi.object().keys(createEventBody),
 };
 
-export const getEvents = {
+export const getEventsByOrganizer = {
     query: Joi.object().keys({
       name: Joi.string(),
       role: Joi.string(),
@@ -51,7 +51,7 @@ export const getTopEvents = {
   }),
 };
 
-export const getRecentEvents = {
+export const getEvents = {
     query: Joi.object().keys({
       name: Joi.string(),
       role: Joi.string(),
@@ -62,12 +62,16 @@ export const getRecentEvents = {
     }),
 };
 
-export const getEventsByCategory = {
-  params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+export const getRecentEventByTopOrganizer = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    role: Joi.string(),
+    sortBy: Joi.string(),
+    eventBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
   }),
-};
-
+}
 
 export const getEvent = {
     params: Joi.object().keys({
@@ -81,14 +85,16 @@ export const getEventByTitle = {
   })
 }
 
-export const getEventTickets = {
+export const getEventTicketsByOrganizer = {
   params: Joi.object().keys({
+    organizer: Joi.string().custom(objectId),
     title: Joi.string()
   })
 }
 
-export const getEventVolunteers = {
+export const getEventVolunteersByOrganizer = {
   params: Joi.object().keys({
+    organizer: Joi.string().custom(objectId),
     title: Joi.string()
   })
 }
@@ -99,15 +105,16 @@ export const getEventsByPrice = {
   })
 }
 
-export const getEventsByOrganizer = {
+export const getEventByOrganizer = {
     params: Joi.object().keys({
-        organizer: Joi.string().custom(objectId),
+      organizer: Joi.string().custom(objectId),
+      title: Joi.string()
     }),
 }
 
 export const getRecentEventsByOrganizer = {
     params: Joi.object().keys({
-        eventOrganizer: Joi.string(),
+      eventOrganizer: Joi.string(),
     }),
 }
 

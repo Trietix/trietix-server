@@ -74,7 +74,7 @@ export class User {
     bank: string = '';
 
     @prop({ default: false })
-    isVerified: boolean = false;
+    isVerified: boolean | "pending" = false;
 
      /**
      * Check if password matches the user's password

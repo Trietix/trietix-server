@@ -11,48 +11,28 @@ router
   .get(validate(eventValidation.getEvents), eventController.getEvents);
 
 router
-  .route('/top-events')
-  .get(auth(), validate(eventValidation.getTopEvents), eventController.getTopEvents)
-
-router
-  .route('/recent-events')
-  .get(auth(), validate(eventValidation.getRecentEvents), eventController.getRecentEvents)
+    .route('/organizer/top/recent')
+    .get(validate(eventValidation.getRecentEventByTopOrganizer), eventController.getRecentEventByTopOrganizer)
 
 router
     .route('/organizer/:organizer')
-    .get(auth(), validate(eventValidation.getEventsByOrganizer), eventController.getEventsByOrganizer)
+    .get(validate(eventValidation.getEventsByOrganizer), eventController.getEventsByOrganizer)
 
 router
-    .route('/organizer/:organizer/recent-events')
-    .get(auth(), validate(eventValidation.getRecentEventsByOrganizer), eventController.getRecentEventsByOrganizer)
+    .route('/organizer/:organizer/title/:title')
+    .get(validate(eventValidation.getEventByOrganizer), eventController.getEventByOrganizer)
 
 router
-    .route('/organizer/:organizer/top-events')
-    .get(auth(), validate(eventValidation.getTopEventsByOrganizer), eventController.getTopEventsByOrganizer)
-    
+    .route('/organizer/:organizer/title/:title/tickets')
+    .get(validate(eventValidation.getEventTicketsByOrganizer), eventController.getEventTicketsByOrganizer)
+
 router
-    .route('/price/:eventPrice')
-    .get(auth(), validate(eventValidation.getEventsByPrice), eventController.getEventsByPrice)
-    
-router
-    .route('/category/:eventCategory')
-    .get(auth(), validate(eventValidation.getEventsByCategory), eventController.getEventsByCategory)
+    .route('/organizer/:organizer/title/:title/volunteers')
+    .get(validate(eventValidation.getEventVolunteersByOrganizer), eventController.getEventVolunteersByOrganizer)
 
 router
     .route('/title/:title')
     .get(validate(eventValidation.getEventByTitle), eventController.getEventByTitle)
-
-router
-    .route('/title/:title/tickets')
-    .get(auth(), validate(eventValidation.getEventTickets), eventController.getEventTickets)
-
-router
-    .route('/title/:title/volunteers')
-    .get(auth(), validate(eventValidation.getEventVolunteers), eventController.getEventVolunteers)
-
-// router
-//     .route('/title/:eventTitle/revenue')
-//     .get(auth(), validate(eventValidation.getEventRevenue), eventController.getEventRevenue)
 
 router
   .route('/:eventId')

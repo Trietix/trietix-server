@@ -12,7 +12,7 @@ router
 
 router
     .route('/organizer/:organizer')
-    .get(auth(), validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
+    .get(validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
 
 router
     .route('/organizer/revenue/:organizer')

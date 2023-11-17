@@ -19,7 +19,7 @@ export const createInvite = async (inviteBody: NewCreatedInvite): Promise<IInvit
     } else {
         const user = await userModel.findOne({ email: inviteBody.email }) as any;
         const event = await eventModel.findById(inviteBody.eventId) as any; 
-        if(event.isEnded === true){
+        if(event?.isEnded === true){
             throw new ApiError(httpStatus.FORBIDDEN, "You can't invite anyone since your event has ended")
         } else if(!user){
             throw new ApiError(httpStatus.NOT_FOUND, "User not found")

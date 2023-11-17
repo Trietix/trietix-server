@@ -15,7 +15,7 @@ const createUserBody: Record<keyof NewCreatedUser, any> = {
   eventsAttended: Joi.string(),
   eventsPaid: Joi.string(),
   volunteer: Joi.string(),
-  isVerified: Joi.boolean(),
+  isVerified: Joi.boolean().valid("pending", true, false),
   phoneNumber: Joi.string(),
   accountNumber: Joi.number(),
   accountName: Joi.string(),

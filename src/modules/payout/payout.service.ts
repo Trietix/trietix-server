@@ -22,12 +22,8 @@ const isDateTimeGreaterThanCurrent = (dateTime: Date): boolean => {
 export const createPayout = async (PayoutBody: NewCreatedPayout): Promise<any | null> => {
     const check = await payoutModel.findOne({ organizerId: PayoutBody.organizerId, eventId: PayoutBody.eventId }) as any;
     const event = await eventModel.findById(PayoutBody.eventId) as any;
-    if(check ){
-        throw new ApiError(httpStatus.FORBIDDEN, `You already requested for payout at ${new Date(check?.createdAt as any).toLocaleTimeString("en-US", {
-    hour: 'numeric',
-    minute: "numeric",
-    hour12: true
-  })}`)
+    if(check){
+        throw new ApiError(httpStatus.FORBIDDEN, `You already requested for payout at ${new Date(check.createdAt as any).toISOString()}`)
     } else if(event.isEnded === false){
         throw new ApiError(httpStatus.FORBIDDEN, "You can't request for payout until after the event");
     } else {
