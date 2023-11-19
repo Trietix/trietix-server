@@ -5,6 +5,7 @@ import userRoute from './user.route';
 import ticketRoute from './ticket.route';
 import inviteRoute from './invite.route';
 import payoutRoute from './payout.route';
+import requestRoute from './request.route';
 
 const router = express.Router();
 
@@ -37,6 +38,10 @@ const defaultIRoute: IRoute[] = [
   {
     path: '/payout',
     route: payoutRoute,
+  },
+  {
+    path: '/request',
+    route: requestRoute,
   },
 ];
 

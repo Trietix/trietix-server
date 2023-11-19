@@ -12,10 +12,10 @@ router
 
 router
     .route('/organizer/:organizer')
-    .get(validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
+    .get(auth(), validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
 
 router
-    .route('/organizer/revenue/:organizer')
+    .route('/organizer/revenue/:organizer') 
     .get(auth(), validate(ticketValidation.getRevenueByOrganizer), ticketController.getRevenueByOrganizer)
 
 router

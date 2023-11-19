@@ -19,6 +19,10 @@ interface EnvVars {
   CLOUDINARY_API_KEY : string;
   CLOUDINARY_API_SECRET: string;
   CLIENT_URL: string;
+  NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: string;
+  NEXT_SECRET_PAYSTACK_SECRET_KEY: string;
+  NEXT_LIVE_SECRET_PAYSTACK_KEY: string;
+  NEXT_LIVE_PUBLIC_PAYSTACK_KEY: string;
 }
 
 class Config {
@@ -61,6 +65,12 @@ class Config {
     apiSecret: string;
   };
   public readonly clientUrl: string;
+  public readonly paystack:{
+    publicKey: string;
+    secretKey: string;
+    liveSecretKey: string;
+    livePublicKey: string;
+  }
 
   constructor(envVars: EnvVars) {
     this.env = envVars.NODE_ENV;
@@ -101,7 +111,13 @@ class Config {
       apiKey: envVars.CLOUDINARY_API_KEY,
       apiSecret: envVars.CLOUDINARY_API_SECRET,
     }
-    this.clientUrl = envVars.CLIENT_URL;
+    this.clientUrl = envVars.CLIENT_URL,
+    this.paystack = {
+      publicKey: envVars.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+      secretKey: envVars.NEXT_SECRET_PAYSTACK_SECRET_KEY,
+      liveSecretKey: envVars.NEXT_LIVE_SECRET_PAYSTACK_KEY,
+      livePublicKey: envVars.NEXT_LIVE_PUBLIC_PAYSTACK_KEY
+    };
   }
 }
 
@@ -128,6 +144,10 @@ const envVarsSchema = Joi.object<EnvVars>()
     CLOUDINARY_API_KEY : Joi.string().description('Api key for cloudinary'),
     CLOUDINARY_API_SECRET: Joi.string().description('Api secret for cloudinary'),
     CLIENT_URL: Joi.string().required().description('Client url'),
+    NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: Joi.string(),
+    NEXT_SECRET_PAYSTACK_SECRET_KEY: Joi.string(),
+    NEXT_LIVE_SECRET_PAYSTACK_KEY: Joi.string(),
+    NEXT_LIVE_PUBLIC_PAYSTACK_KEY: Joi.string()
   })
   .unknown();
 

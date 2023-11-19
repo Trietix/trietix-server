@@ -6,18 +6,26 @@ import { userModel } from '../user';
 import { eventModel } from '../event';
 import ticketModel from './ticket.model';
 import { sendMail } from '../utils/sendMail';
+import Config from '../../config/config';
+import axios from 'axios';
 
 /**
  * Create Ticket
  * @param { NewCreatedTicket } ticketBody
  * @returns { Promis<ITicketDoc | null> }
  */
-export const createTicket = async (ticketBody: NewCreatedTicket): Promise<ITicketDoc | null> => {
-    const ticket = await ticketModel.create(ticketBody);
+const headers = {
+    Authorization: `Bearer ${Config.paystack.liveSecretKey}`
+}
+export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> => {
     try {
-        return ticket;
-    } catch(err){
-        throw(new ApiError(httpStatus.NOT_FOUND, `Error- ${err}`));
+        await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`, { headers }).then((res)=>{
+            // console.log(res.data.status)
+            const ticket = ticketModel.create(ticketBody);
+            return ticket;
+        })
+    } catch (err: any){
+        throw(new ApiError(httpStatus.FORBIDDEN, `Forbidden`));
     }
 }
 

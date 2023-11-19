@@ -12,23 +12,23 @@ router
 
 router
     .route('/organizer/top/recent')
-    .get(validate(eventValidation.getRecentEventByTopOrganizer), eventController.getRecentEventByTopOrganizer)
+    .get(auth(), validate(eventValidation.getRecentEventByTopOrganizer), eventController.getRecentEventByTopOrganizer)
 
 router
     .route('/organizer/:organizer')
-    .get(validate(eventValidation.getEventsByOrganizer), eventController.getEventsByOrganizer)
+    .get(auth(), validate(eventValidation.getEventsByOrganizer), eventController.getEventsByOrganizer)
 
 router
     .route('/organizer/:organizer/title/:title')
-    .get(validate(eventValidation.getEventByOrganizer), eventController.getEventByOrganizer)
+    .get(auth(), validate(eventValidation.getEventByOrganizer), eventController.getEventByOrganizer)
 
 router
     .route('/organizer/:organizer/title/:title/tickets')
-    .get(validate(eventValidation.getEventTicketsByOrganizer), eventController.getEventTicketsByOrganizer)
+    .get(auth(), validate(eventValidation.getEventTicketsByOrganizer), eventController.getEventTicketsByOrganizer)
 
 router
     .route('/organizer/:organizer/title/:title/volunteers')
-    .get(validate(eventValidation.getEventVolunteersByOrganizer), eventController.getEventVolunteersByOrganizer)
+    .get(auth(), validate(eventValidation.getEventVolunteersByOrganizer), eventController.getEventVolunteersByOrganizer)
 
 router
     .route('/title/:title')

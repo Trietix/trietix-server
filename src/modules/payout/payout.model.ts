@@ -1,5 +1,11 @@
 import typegoose,{ pre, prop, modelOptions, getModelForClass, index, Ref } from "@typegoose/typegoose";
 
+@modelOptions({
+    schemaOptions: {
+        timestamps: true
+    }
+})
+
 export class Payout {
     @prop({ required: true, trim: true })
     eventId: string = '';
