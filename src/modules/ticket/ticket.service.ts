@@ -26,7 +26,7 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
             return ticket;
         }
     } catch (err: any){
-        // console.log(err);
+        console.log(err);
         throw(new ApiError(httpStatus.FORBIDDEN, `Forbidden`));
     }
     // const ticket = ticketModel.create(ticketBody);
