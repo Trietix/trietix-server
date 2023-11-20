@@ -15,7 +15,7 @@ import { sendMail } from '../utils/sendMail';
 export const createRequest = async (RequestBody: NewCreatedRequest): Promise<any | null> => {
     const check = await requestModel.findOne({ organizerId: RequestBody.organizerId, status: "pending" }) as any;
     if(check){
-        throw new ApiError(httpStatus.FORBIDDEN, `You already requested for verification at ${new Date(check.createdAt as any).toISOString().toLocaleString()}`)
+        throw new ApiError(httpStatus.FORBIDDEN, `You already requested for verification at ${new Date(check.createdAt as any).toLocaleString()}`)
     }  else {
         const Request = await requestModel.create(RequestBody) as any;
         const user = await userService.getUserById(RequestBody.organizerId as any)
