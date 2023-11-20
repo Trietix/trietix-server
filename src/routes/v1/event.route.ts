@@ -36,7 +36,7 @@ router
 
 router
   .route('/:eventId')
-  .get(auth('manageEvents'), validate(eventValidation.getEvent), eventController.getEvent)
+  .get( validate(eventValidation.getEvent), eventController.getEvent)
   .patch(auth('updateEvents'), validate(eventValidation.updateEvent), eventController.updateEvent)
   .delete(auth('deleteEvents'), validate(eventValidation.deleteEvent), eventController.deleteEvent);
 
