@@ -53,15 +53,15 @@ const authMiddleware =
             }
             resolve();
             req.user = decoded;  
-            console.log(decoded)     
-            if (requiredRights.length) {
-              const userRights = roleRights.get(decoded.role);
-              if (!userRights) return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-              const hasRequiredRights = requiredRights.every((requiredRight: string) => userRights.includes(requiredRight));
-              if (!hasRequiredRights && req.params['userId'] !== decoded.id) {
-                return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-              }
-            }
+            // console.log(decoded)     
+            // if (requiredRights.length) {
+            //   const userRights = roleRights.get(decoded.role);
+            //   if (!userRights) return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+            //   const hasRequiredRights = requiredRights.every((requiredRight: string) => userRights.includes(requiredRight));
+            //   if (!hasRequiredRights && req.params['userId'] !== decoded.id) {
+            //     return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+            //   }
+            // }
             next();
           })
         } else {

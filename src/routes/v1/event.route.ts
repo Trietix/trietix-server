@@ -36,8 +36,8 @@ router
 
 router
   .route('/:eventId')
-  .get( validate(eventValidation.getEvent), eventController.getEvent)
-  .patch(auth('updateEvents'), validate(eventValidation.updateEvent), eventController.updateEvent)
-  .delete(auth('deleteEvents'), validate(eventValidation.deleteEvent), eventController.deleteEvent);
+  .get(auth(), validate(eventValidation.getEvent), eventController.getEvent)
+  .patch(auth(), validate(eventValidation.updateEvent), eventController.updateEvent)
+  .delete(auth(), validate(eventValidation.deleteEvent), eventController.deleteEvent);
 
 export default router;
