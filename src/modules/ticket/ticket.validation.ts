@@ -43,7 +43,7 @@ export const getTicketByTransactionId = {
 
 export const getTicket = {
     params: Joi.object().keys({
-      ticektId: Joi.string().custom(objectId),
+      ticketId: Joi.string().custom(objectId),
     }),
 };
 
@@ -67,18 +67,18 @@ export const getTicketsByUser = {
 
 export const getTicketsByPrice = {
     params: Joi.object().keys({
-        ticektOrganizer: Joi.string(),
+        ticketOrganizer: Joi.string(),
     }),
 }
 
 export const updateTicket = {
     params: Joi.object().keys({
-      ticektId: Joi.required().custom(objectId),
+      ticketId: Joi.required().custom(objectId),
     })
 }
   
 export const deleteTicket = {
     params: Joi.object().keys({
-      ticektId: Joi.string().custom(objectId)
+      ticketId: Joi.string().custom(objectId)
     }),
 };
