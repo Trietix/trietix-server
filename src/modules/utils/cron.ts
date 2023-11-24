@@ -26,6 +26,8 @@ const updateEvent = () => {
         }
 
         console.log(`Started ${eventsStarted} events`);
+        console.log(`Time-${currentTime}`)
+        console.log(`Date-${currentDate}`)
 
         // const eventsToEnd = await eventModel.find({
         //     endTime: { $gte: currentTime },
