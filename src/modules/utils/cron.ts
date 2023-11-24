@@ -27,20 +27,20 @@ const updateEvent = () => {
 
         console.log(`Started ${eventsStarted} events`);
 
-        const eventsToEnd = await eventModel.find({
-            endTime: { $gte: currentTime },
-            date: { $gte: currentDate },
-            isStarted: true,
-            isEnded: false,
-        });
+        // const eventsToEnd = await eventModel.find({
+        //     endTime: { $gte: currentTime },
+        //     date: { $gte: currentDate },
+        //     isStarted: true,
+        //     isEnded: false,
+        // });
 
-        for (const event of eventsToEnd) {
-            event.isEnded = true;
-            eventsEnded++;
-            await event.save();
-        }
+        // for (const event of eventsToEnd) {
+        //     event.isEnded = true;
+        //     eventsEnded++;
+        //     await event.save();
+        // }
 
-        console.log(`Ended ${eventsEnded} events`);
+        // console.log(`Ended ${eventsEnded} events`);
     }, {
         scheduled: true,
         timezone: 'Africa/Lagos',
