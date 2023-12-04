@@ -12,7 +12,7 @@ const connectToDB = async() => {
       logger.info('Connected to MongoDB...');
       server = app.listen(config.port, () => {
         logger.info(`Server listening on port ${config.port}`);
-        updateEvent()
+        // updateEvent()
       });
     });
   } catch(error: any){
@@ -25,7 +25,7 @@ connectToDB();
 
 setInterval(()=>{
   console.log('Initiating scheduling...');
-  axios.get(`https://api.trietix.com/api/v1`)
+  axios.get(`https://api.trietix.com/api/v1/health`)
     .then((res)=> console.log(`Pinged: ${res.status}`))
     .catch((err)=> console.log(`Error pinging server: ${err}`))
 }, 10*60*1000)

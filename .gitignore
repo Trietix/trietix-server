@@ -16,5 +16,3 @@ coverage
 
 # docker volume
 data
-
-test.http

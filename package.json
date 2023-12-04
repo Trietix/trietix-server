@@ -11,7 +11,7 @@
     "compile:watch": "tsc --build --watch",
     "pre:dev": "cross-env NODE_ENV=development nodemon lib/index.js",
     "dev": "concurrently --kill-others \"npm run compile:watch\" \"npm run pre:dev\"",
-    "release": "git add . && npm run commit && git push --follow-tags private main",
+    "release": "git add . && npm run commit && git push --follow-tags repo main",
     "commit": "git-cz",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

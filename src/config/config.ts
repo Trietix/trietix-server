@@ -2,7 +2,7 @@ import Joi from 'joi';
 import 'dotenv/config';
 
 interface EnvVars {
-  NODE_ENV: 'production' | 'development' | 'test';
+  NODE_ENV: 'production' | 'development' | 'staging';
   PORT: number;
   MONGODB_URL: string;
   JWT_SECRET: string;

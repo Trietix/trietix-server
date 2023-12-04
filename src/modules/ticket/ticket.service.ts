@@ -19,12 +19,17 @@ const headers = {
 }
 export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> => {
     try {
-        const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
-        const verificationData = verification.data.data;
-        if(verificationData.status === 'success'){
+        if(Config.env === "production"){
+            const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
+            const verificationData = verification.data.data;
+            if(verificationData.status === 'success'){
+                const ticket = ticketModel.create(ticketBody);
+                return ticket;
+            }
+        } else {
             const ticket = ticketModel.create(ticketBody);
             return ticket;
-        }
+        } 
     } catch (err: any){
         console.log(err);
         throw(new ApiError(httpStatus.FORBIDDEN, `Forbidden`));

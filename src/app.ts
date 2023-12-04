@@ -40,10 +40,10 @@ app.use(
   );
 
 // parse json request body
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: '10mb' }));
  
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // sanitize request data
 app.use(xss());
@@ -65,10 +65,10 @@ if (config.env === 'production') {
 app.use('/api/v1', routes);
 
 
-// // send back a 404 error for any unknown api request
-// app.use((_req, _res, next) => {
-//   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
-// });
+// send back a 404 error for any unknown api request
+app.use((_req, _res, next) => {
+  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+});
 
 // convert error to ApiError, if needed
 app.use(errorConverter);

@@ -22,7 +22,7 @@ export const getTickets = {
       name: Joi.string(),
       role: Joi.string(),
       sortBy: Joi.string(),
-      ticektBy: Joi.string(),
+      ticketBy: Joi.string(),
       limit: Joi.number().integer(),
       page: Joi.number().integer(),
     }),

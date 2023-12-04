@@ -7,18 +7,14 @@ import * as authService from './auth.service';
 import { sendMail } from '../utils/sendMail';
 
 export const register = catchAsync(async (req: Request, res: Response) => {
-  if(req.body.role === "admin"){
-    res.status(httpStatus.FORBIDDEN);
-  } else {
-    const user = await userService.registerUser(req.body);
-    const tokens = await tokenService.generateAuthTokens(user);
-      if(req.body.bank){
-        sendMail(req.body.email, "Welcome to Trietix", {}, "organizer/welcome.hbs")
-      } else{
-        sendMail(req.body.email, "Welcome to Trietix", {}, "user/welcome.handlebars")
-      }
-        res.status(httpStatus.CREATED).send({ user, tokens });
-  }
+  const user = await userService.registerUser(req.body);
+  const tokens = await tokenService.generateAuthTokens(user);
+    if(req.body.bank){
+      sendMail(req.body.email, "Welcome to Trietix", {}, "organizer/welcome.hbs")
+    } else{
+      sendMail(req.body.email, "Welcome to Trietix", {}, "user/welcome.handlebars")
+    }
+      res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
 export const login = catchAsync(async (req: Request, res: Response) => {
