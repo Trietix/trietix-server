@@ -21,6 +21,9 @@ export class Ticket {
     price: number = 0;
 
     @prop({ required: true, trim: true })
+    processingFee: number = 0;
+
+    @prop({ required: true, trim: true })
     event: string = '';
 
     @prop({ trim: true })
