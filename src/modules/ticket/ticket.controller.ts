@@ -42,7 +42,8 @@ export const getRevenueByOrganizer = catchAsync(async (req: Request, res: Respon
     const revenue = await ticketService.getRevenueByOrganizer(new mongoose.Types.ObjectId(req.params['organizer']));
     if (!revenue) {
       throw new ApiError(httpStatus.NOT_FOUND, 'No revenue');
-    }
+    };
+      console.log(revenue);
     res.send(revenue);
   }
 });
