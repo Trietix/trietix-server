@@ -6,6 +6,7 @@ const createTicketBody: Record<keyof NewCreatedTicket, any> = {
     email: Joi.string().required(),
     amount: Joi.number().required(),
     ticketId: Joi.string().required(),
+    processingFee: Joi.number().required(),
     price: Joi.number().required(),
     event: Joi.string().required(),
     isCheckedIn: Joi.boolean().required(),
