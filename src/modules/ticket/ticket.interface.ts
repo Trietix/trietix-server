@@ -4,6 +4,7 @@ export interface ITicket {
     amount: number;
     ticketId: string;
     price: number;
+    processingFee: number;
     event: string;
     isCheckedIn: boolean;
     noOfCheckedIn: number;
