@@ -76,6 +76,7 @@ export const getRevenueByOrganizer = async (organizerId: mongoose.Types.ObjectId
         const tickets = await ticketModel.find({ event: event.id }) as any;
         for(const ticket of tickets){
             let moneyMade = ticket.price - (ticket.processingFee * ticket.amount);
+            console.log(moneyMade);
             let dateCreated = new Date(ticket.createdAt).toISOString().slice(0, 10);
             ticketsRevenue.push({moneyMade, dateCreated});
         } 
