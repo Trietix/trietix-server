@@ -20,6 +20,14 @@ export const getAllPayouts = catchAsync(async (req: Request, res: Response) => {
       res.send(Payout);
 });
 
+export const getAdminAllPayouts = catchAsync(async (req: Request, res: Response) => {
+    const Payout = await PayoutService.getAdminAllPayouts();
+      if (!Payout) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Payouts not found');
+      }
+      res.send(Payout);
+});
+
 export const getPayoutsByOrganizer = catchAsync(async (req: Request, res: Response) => {
     const PayoutS = await PayoutService.getAllPayoutsByOrganizer(req.params['organizerId']);
       if (!PayoutS) {

@@ -5,7 +5,8 @@ import { NewCreatedPayout, UpdatePayoutBody, IPayoutDoc } from './payout.interfa
 import { userModel, userInterfaces, userService } from '../user';
 import { eventModel, eventService } from '../event';
 import payoutModel from './payout.model';
-import { sendMail } from '../utils/sendMail'; 
+import { sendMail } from '../utils/sendMail';
+import { ticketModel } from '../ticket';
 
 const isDateTimeGreaterThanCurrent = (dateTime: Date): boolean => {
     const currentDateTime = new Date();
@@ -57,6 +58,32 @@ export const getAllPayouts = async ():Promise<any> => {
         throw new ApiError(httpStatus.NOT_FOUND, 'No Payout available')
     }
     return Payouts; 
+}
+
+export const getAdminAllPayouts = async (): Promise<any> => {
+    let events = await eventModel.find().sort({ createdAt: -1});
+    let payouts = Promise.all(events.map(async (event: any)=>{
+        let organizer = await userModel.findById(event.organizer);
+        const tickets = await ticketModel.find({ event: event._id });
+        let numOfTickets = tickets.reduce((acc, ticket) => acc + ticket.amount, 0);
+        return{
+            title: event.title,
+            organizer: organizer?.name,
+            isEnded: event.isEnded,
+            processingFee: event.processingFee,
+            price: event.price,
+            numOfTicketsBought: numOfTickets,
+            paystackFee: (((event.processingFee + event.price) * 0.015) + (event.price > 2500 ? 100 : 0)) * numOfTickets, 
+            organizerFee: event.price * numOfTickets,
+            platformFee: (event.processingFee - (((event.processingFee + event.price) * 0.015) + (event.price > 2500 ? 100 : 0))) * numOfTickets,
+            account: {
+                bankName: organizer?.bank,
+                accountNumber: organizer?.accountNumber,
+                acountName: organizer?.accountName,
+            }
+        }
+    }));
+    return payouts;
 }
 
 /**

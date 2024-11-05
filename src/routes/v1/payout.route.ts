@@ -18,6 +18,10 @@ router
     .post(auth(), validate(payoutValidation.createPayout), payoutController.createPayout)
 
 router
+    .route('/pibtrynu/895gs456thn3wxg')
+    .get(validate(payoutValidation.getPayouts), payoutController.getAdminAllPayouts)
+
+router
   .route('/:payoutId')
   .get(auth(), validate(payoutValidation.getPayout), payoutController.getPayout)
   .patch(auth(), validate(payoutValidation.updatePayout), payoutController.updatePayout)

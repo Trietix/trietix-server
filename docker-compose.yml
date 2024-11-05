@@ -1,0 +1,38 @@
+services:
+  trietix_api:
+    container_name: trietix_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "5000:5000"
+    networks:
+      - app_network
+
+  proxy:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx_proxy_manager_dev
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:81"
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - app_network
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
