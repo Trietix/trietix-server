@@ -2,8 +2,7 @@
     "apps": [
         {
             "name": "trietix-server",
-            "script": "npm",
-            "args": "run dev",
+            "script": "lib/index.js",
             "node_args": "",
             "instances": 4,
             "autorestart": true,
