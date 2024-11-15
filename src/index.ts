@@ -25,7 +25,7 @@ connectToDB();
 
 setInterval(()=>{
   console.log('Initiating scheduling...');
-  axios.get(`https://api.trietix.com/api/v1/health`)
+  axios.get(`https://dinner.nuesaabuad.ng/api/clean-up`)
     .then((res)=> console.log(`Pinged: ${res.status}`))
     .catch((err)=> console.log(`Error pinging server: ${err}`))
 }, 10*60*1000)
