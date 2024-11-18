@@ -26,13 +26,13 @@ export const paystackWebHook = catchAsync(async (req: Request, res: Response) =>
 })
 
 export const getTicket = catchAsync(async (req: Request, res: Response) => {
-    if (typeof req.params['ticketId'] === 'string') {
-      const ticket = await ticketService.getTicketById(new mongoose.Types.ObjectId(req.params['ticketId']));
-      if (!ticket) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Ticket not found');
-      }
-      res.send(ticket);
+  if (typeof req.params['ticketId'] === 'string') {
+    const ticket = await ticketService.getTicketById(new mongoose.Types.ObjectId(req.params['ticketId']));
+    if (!ticket) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Ticket not found');
     }
+    res.send(ticket);
+  }
 });
 
 export const getTickets = catchAsync(async (req: Request, res: Response)=>{

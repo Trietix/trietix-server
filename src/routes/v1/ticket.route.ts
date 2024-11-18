@@ -11,6 +11,11 @@ router
   .get(auth(), validate(ticketValidation.getTickets), ticketController.getTickets);
 
 router
+  .route('/webhook/paystack')
+  .post(validate(ticketValidation.getTickets), ticketController.paystackWebHook)
+
+
+router
     .route('/organizer/:organizer')
     .get(auth(), validate(ticketValidation.getTicketsByOrganizer), ticketController.getTicketsByOrganizer)
 
