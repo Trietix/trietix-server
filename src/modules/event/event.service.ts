@@ -197,7 +197,7 @@ export const getEventById = async(eventId: mongoose.Types.ObjectId): Promise<IEv
  * @returns {Promise<IEventDoc | null>}
  */
 export const getEventByTitle = async(eventTitle: string): Promise<IEventDoc | null> => {
-    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
+    const event = await eventModel.findOne({ $or: [{title: eventTitle.split('-').join(' ')}, {url: eventTitle.split('-').join(' ')}] });
     return event;
 };
 

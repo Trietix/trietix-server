@@ -12,6 +12,9 @@ const categories = ['conferences', 'concerts_and_music', "sports_and_fitness", "
 export class Event {
     @prop({ required: true, trim: true })
     title: string = '';
+
+    @prop({ default: null, trim: true })
+    url: string = '';
     
     @prop({ required: true, trim: true })
     description: string = '';
