@@ -47,7 +47,8 @@ export const getEvents = async ():Promise<any> => {
  * @returns {Promise<ICommandDoc | null>}
  */
 export const getEvent = async (eventTitle: string): Promise<any> => {
-    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
+    // const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
+    const event = await eventModel.findOne({ $or: [{title: eventTitle.split('-').join(' ')}, {url: eventTitle.split('-').join(' ')}] });
     return event;
 }
 
