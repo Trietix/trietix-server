@@ -38,6 +38,44 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
     // return ticket;
 }
 
+export const paystackWebHook = async (payload: any) => {
+    try {
+        console.log(payload);
+        // if(payload.event === "transfer.success"){
+        //     // if(payload.data.recipient.metadata === "")
+        //     let ticket = await ticketModel.findOne({ reference: payload.reference });
+        //     if(!ticket){
+        //         let ticket = await ticketModel.create({...payload.data.recipient.metadata, ticketId: payload.reference });
+        //         sendMail(payload.data.recipient.metadata.email, `Ticket purchase successful [${payload.reference}] - Trietix`, { amount: payload.data.recipient.metadata.amount, url:`https://trietix.com/ticket/${payload.reference}`}, "user/ticket.hbs");
+        //         return ticket
+        //     } else {
+        //         throw(new ApiError(httpStatus.FORBIDDEN, `Not a transfer.success event`));
+        //     }
+        // }
+        // if(Config.env === "production"){
+        //     const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
+        //     const verificationData = verification.data.data;
+        //     if(verificationData.status === 'success'){
+        //         const ticket = ticketModel.create(ticketBody);
+        //         return ticket;
+        //     }
+        // } else {
+        //     const ticket = ticketModel.create(ticketBody);
+        //     return ticket;
+        // } 
+        // const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+        // if (hash == req.headers['x-paystack-signature']) {
+        // // Retrieve the request's body
+        // const event = req.body;
+        // // Do something with event  
+        // }
+        // res.send(200);
+    } catch (err: any){
+        console.log(err);
+        throw(new ApiError(httpStatus.FORBIDDEN, `Forbidden`));
+    }
+}
+
 /**
  * Get all the tickets
  * @returns {Promise<ITicketDoc | null>}

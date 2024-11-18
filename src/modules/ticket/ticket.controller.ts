@@ -5,12 +5,25 @@ import catchAsync from '../utils/catchAsync';
 import ApiError from '../errors/ApiError';
 import * as ticketService from './ticket.service';
 import { sendMail } from '../utils/sendMail';
+import Config from '../../config/config';
+import crypto from 'crypto'
 
 export const createTicket =  catchAsync(async (req: Request, res: Response) => {
     const ticket = await ticketService.createTicket(req.body);
     sendMail(req.body.email, `Ticket purchase successful [${req.body.ticketId}] - Trietix`, { amount: req.body.amount, url:`https://trietix.com/ticket/${req.body.ticketId}`}, "user/ticket.hbs");
     res.status(httpStatus.CREATED).send(ticket);
 });
+
+export const paystackWebHook = catchAsync(async (req: Request, res: Response) => {
+  const hash = crypto.createHmac('sha512', Config.paystack.liveSecretKey).update(JSON.stringify(req.body)).digest('hex');
+  if (hash == req.headers['x-paystack-signature']) {
+    const event = req.body;
+    ticketService.paystackWebHook(event);
+    res.status(httpStatus.CREATED).send({"message":"Successfull"});
+  } else {
+    res.status(httpStatus.FORBIDDEN).send({"message":"Forbidden"});
+  }
+})
 
 export const getTicket = catchAsync(async (req: Request, res: Response) => {
     if (typeof req.params['ticketId'] === 'string') {
