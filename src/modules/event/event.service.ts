@@ -47,11 +47,11 @@ export const getEvents = async ():Promise<any> => {
  * @returns {Promise<ICommandDoc | null>}
  */
 export const getEvent = async (eventTitle: string): Promise<any> => {
-    // const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
-    console.log(eventTitle.split('-').join(' '))
-    const event = await eventModel.findOne({ $or: [{title: eventTitle.split('-').join(' ')}, {url: eventTitle.split('-').join(' ')}] });
-    const anotherEvent = await eventModel.findOne({ url: eventTitle.split('-').join(' ') })
-    console.log(anotherEvent);
+    const event = await eventModel.findOne({ title: eventTitle.split('-').join(' ') });
+    // console.log(eventTitle.split('-').join(' '))
+    // const event = await eventModel.findOne({ $or: [{title: eventTitle.split('-').join(' ')}, {url: eventTitle.split('-').join(' ')}] });
+    // const anotherEvent = await eventModel.findOne({ url: eventTitle.split('-').join(' ') })
+    // console.log(anotherEvent);
     return event;
 }
 
@@ -202,6 +202,9 @@ export const getEventById = async(eventId: mongoose.Types.ObjectId): Promise<IEv
  */
 export const getEventByTitle = async(eventTitle: string): Promise<IEventDoc | null> => {
     const event = await eventModel.findOne({ $or: [{title: eventTitle.split('-').join(' ')}, {url: eventTitle.split('-').join(' ')}] });
+    console.log(eventTitle.split('-').join(' '))
+    const anotherEvent = await eventModel.findOne({ url: eventTitle.split('-').join(' ') })
+    console.log(anotherEvent);
     return event;
 };
 
