@@ -12,6 +12,7 @@ router
 
 router
   .route('/webhook/paystack')
+  .get(validate(ticketValidation.getTickets), ticketController.getPaystackWebhook)
   .post(validate(ticketValidation.getTickets), ticketController.paystackWebHook)
 
 

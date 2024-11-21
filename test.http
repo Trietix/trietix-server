@@ -1,9 +1,13 @@
-
-
-PosT http://localhost:5000/api/v1/auth/login
+POST https://trietix-server-2.onrender.com/api/v1/ticket
 content-type: application/json
 
 {
-    "email": "emmanuelomoiya6@gmail.com",
-    "password": "Emmanuel1"
+    "email": "abduhameedyakubu123@gmail.com",
+    "ticketId": "T236935350780642",
+    "processingFee": 350,
+    "amount": 1,
+    "price": 3850,
+    "event": "673a408efc49daa2e398253e",
+    "isCheckedIn": false,
+    "noOfCheckedIn": 0
 }

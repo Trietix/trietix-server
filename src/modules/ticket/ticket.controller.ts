@@ -25,6 +25,10 @@ export const paystackWebHook = catchAsync(async (req: Request, res: Response) =>
   }
 })
 
+export const getPaystackWebhook = catchAsync(async (req: Request, res: Response) => {
+  res.status(httpStatus.FORBIDDEN).send({"message":"Welcome to paystack webhook"});
+})
+
 export const getTicket = catchAsync(async (req: Request, res: Response) => {
   if (typeof req.params['ticketId'] === 'string') {
     const ticket = await ticketService.getTicketById(new mongoose.Types.ObjectId(req.params['ticketId']));
