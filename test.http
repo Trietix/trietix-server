@@ -1,4 +1,5 @@
-POST https://trietix-server-2.onrender.com/api/v1/ticket
+# POST https://trietix-server-2.onrender.com/api/v1/ticket
+POST https://trietix-server-2.onrender.com/api/v1/ticket/webhook/paystack
 content-type: application/json
 
 {

@@ -41,17 +41,17 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
 export const paystackWebHook = async (payload: any) => {
     try {
         console.log(payload);
-        // if(payload.event === "transfer.success"){
-        //     // if(payload.data.recipient.metadata === "")
-        //     let ticket = await ticketModel.findOne({ reference: payload.reference });
-        //     if(!ticket){
-        //         let ticket = await ticketModel.create({...payload.data.recipient.metadata, ticketId: payload.reference });
-        //         sendMail(payload.data.recipient.metadata.email, `Ticket purchase successful [${payload.reference}] - Trietix`, { amount: payload.data.recipient.metadata.amount, url:`https://trietix.com/ticket/${payload.reference}`}, "user/ticket.hbs");
-        //         return ticket
-        //     } else {
-        //         throw(new ApiError(httpStatus.FORBIDDEN, `Not a transfer.success event`));
-        //     }
-        // }
+        if(payload.event === "charge.success"){
+            // if(payload.data.recipient.metadata === "")
+            let ticket = await ticketModel.findOne({ reference: payload.data.reference });
+            if(!ticket){
+                let ticket = await ticketModel.create({...payload.data.metadata, ticketId: payload.data.reference });
+                sendMail("emmanuelomoiya6@gmail.com", `Ticket purchase successful [${payload.data.reference}] - Trietix`, { amount: payload.data.metadata.amount, url:`https://trietix.com/ticket/${payload.data.reference}`}, "user/ticket.hbs");
+                return ticket
+            } else {
+                throw(new ApiError(httpStatus.FORBIDDEN, `Not a charge.success event`));
+            }
+        }
         // if(Config.env === "production"){
         //     const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
         //     const verificationData = verification.data.data;
@@ -67,7 +67,7 @@ export const paystackWebHook = async (payload: any) => {
         // if (hash == req.headers['x-paystack-signature']) {
         // // Retrieve the request's body
         // const event = req.body;
-        // // Do something with event  
+        // Do something with event  
         // }
         // res.send(200);
     } catch (err: any){
