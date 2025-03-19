@@ -34,7 +34,7 @@ export const createEvent = async (eventBody: NewCreatedEvent): Promise<IEventDoc
  * @returns {Promise<IEventDoc | null>}
  */
 export const getEvents = async ():Promise<any> => {
-    const events = await eventModel.find({ isEnded: false, isCancelled: false });
+    const events = await eventModel.find({ isEnded: false, isCancelled: false }).sort({ createdAt: -1 });
     if(!events){
         throw new ApiError(httpStatus.NOT_FOUND, 'No event available')
     }
