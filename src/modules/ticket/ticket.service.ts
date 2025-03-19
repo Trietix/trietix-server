@@ -20,7 +20,8 @@ const headers = {
 export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> => {
     try {
         if(Config.env === "production"){
-            let ticket = await ticketModel.findOne({ reference: ticketBody.ticketId });
+            console.log("If statement");
+            let ticket = await ticketModel.findOne({ ticketId: ticketBody.ticketId });
             if(!ticket){
                 const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
                 const verificationData = verification.data.data;
@@ -32,6 +33,7 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
                 return ticket;
             }
         } else {
+            console.log("Else statement")
             const ticket = ticketModel.create(ticketBody);
             return ticket;
         } 
@@ -45,28 +47,28 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
 
 export const paystackWebHook = async (payload: any) => {
     try {
-        if(payload.event === "charge.success"){
-            let ticket = await ticketModel.findOne({ reference: payload.data.reference });
-            if(!ticket){
-                let metadata = payload.data.metadata
-                let data = {
-                    email: metadata.email,
-                    amount: metadata.amount,
-                    ticketId: payload.data.reference,
-                    price: metadata.price,
-                    isCheckedIn: false,
-                    event: metadata.event,
-                    user: '',
-                    processingFee: metadata.processingFee,
+            if(payload.event === "charge.success"){
+                let ticket = await ticketModel.findOne({ ticketId: payload.data.reference });
+                if(!ticket){
+                    let metadata = payload.data.metadata
+                    let data = {
+                        email: metadata.email,
+                        amount: metadata.amount,
+                        ticketId: payload.data.reference,
+                        price: metadata.price,
+                        isCheckedIn: false,
+                        event: metadata.event,
+                        user: '',
+                        processingFee: metadata.processingFee,
+                    }
+                    let ticket = await ticketModel.create(data);
+                    console.log("Ticket created:", ticket)
+                    // sendMail("emmanuelomoiya6@gmail.com", `Ticket purchase successful [${payload.data.reference}] - Trietix`, { amount: payload.data.metadata.amount, url:`https://trietix.com/ticket/${payload.data.reference}`}, "user/ticket.hbs");
+                    return ticket
+                } else {
+                    throw(new ApiError(httpStatus.FORBIDDEN, `Not a charge.success event`));
                 }
-                let ticket = await ticketModel.create(data);
-                console.log("Ticket created:", ticket)
-                // sendMail("emmanuelomoiya6@gmail.com", `Ticket purchase successful [${payload.data.reference}] - Trietix`, { amount: payload.data.metadata.amount, url:`https://trietix.com/ticket/${payload.data.reference}`}, "user/ticket.hbs");
-                return ticket
-            } else {
-                throw(new ApiError(httpStatus.FORBIDDEN, `Not a charge.success event`));
             }
-        }
         // if(Config.env === "production"){
         //     const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
         //     const verificationData = verification.data.data;
