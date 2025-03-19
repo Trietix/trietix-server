@@ -20,10 +20,15 @@ const headers = {
 export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> => {
     try {
         if(Config.env === "production"){
-            const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
-            const verificationData = verification.data.data;
-            if(verificationData.status === 'success'){
-                const ticket = ticketModel.create(ticketBody);
+            let ticket = await ticketModel.findOne({ reference: ticketBody.ticketId });
+            if(!ticket){
+                const verification = await axios.get(`https://api.paystack.co/transaction/verify/${ticketBody.ticketId}`,  { headers })
+                const verificationData = verification.data.data;
+                if(verificationData.status === 'success'){
+                    const ticket = ticketModel.create(ticketBody);
+                    return ticket;
+                }
+            } else {
                 return ticket;
             }
         } else {
@@ -40,7 +45,6 @@ export const createTicket = async (ticketBody: NewCreatedTicket): Promise<any> =
 
 export const paystackWebHook = async (payload: any) => {
     try {
-        console.log(payload);
         if(payload.event === "charge.success"){
             let ticket = await ticketModel.findOne({ reference: payload.data.reference });
             if(!ticket){

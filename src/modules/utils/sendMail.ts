@@ -103,7 +103,7 @@ export async function sendMail(to: string, subject: string, payload: Object, htm
     const transporter = nodemailer.createTransport({
     // @ts-ignore
       service: "gmail",
-      secure: true,
+      secure: false,
       auth: {
         type: "OAuth2",
         user: user, //your gmail account you used to set the project up in google cloud console"
