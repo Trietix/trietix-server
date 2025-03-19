@@ -18,8 +18,9 @@ export const paystackWebHook = catchAsync(async (req: Request, res: Response) =>
   const hash = crypto.createHmac('sha512', Config.paystack.liveSecretKey).update(JSON.stringify(req.body)).digest('hex');
   if (hash == req.headers['x-paystack-signature']) {
     const event = req.body;
-    ticketService.paystackWebHook(event);
-    res.status(httpStatus.CREATED).send({"message":"Successfull"});
+    await ticketService.paystackWebHook(event);
+    await sendMail(event.data.metadata.email, `Ticket purchase successful [${event.data.reference}] - Trietix`, { amount: event.data.metadata.amount, url:`https://trietix.com/ticket/${event.data.reference}`}, "user/ticket.hbs");
+    res.status(httpStatus.CREATED).send({"message":"Successful"});
   } else {
     res.status(httpStatus.FORBIDDEN).send({"message":"Forbidden"});
   }

@@ -2,17 +2,19 @@ import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import Token from '../token/token.model';
 import ApiError from '../errors/ApiError';
+import { sendMail } from '../utils/sendMail';
 import tokenTypes from '../token/token.types';
+import bcrypt from 'bcryptjs';
 import { getUserByEmail, getUserById, updateUserById } from '../user/user.service';
 import { IUserDoc, IUserWithTokens } from '../user/user.interfaces';
-import { generateAuthTokens, verifyToken } from '../token/token.service';
+import { generateAuthTokens, verifyToken, generateResetPasswordToken } from '../token/token.service';
 
 /**
  * Login with username and password
  * @param {string} email
  * @param {string} password
  * @returns {Promise<IUserDoc>}
- */
+ */ 
 export const loginUserWithEmailAndPassword = async (email: string, password: string): Promise<IUserDoc> => {
   const user = await getUserByEmail(email);
   if (!user || !(await user.isPasswordMatch(password))) {
@@ -54,3 +56,37 @@ export const refreshAuth = async (refreshToken: string): Promise<IUserWithTokens
     throw new ApiError(httpStatus.FORBIDDEN, error);
   }
 };
+
+export const forgotPassword = async (email: string) => {
+  try {
+    let user  = await getUserByEmail(email);
+    if(user){
+      let resetToken = await generateResetPasswordToken(email);
+      if(user.bank){
+        sendMail(email, "Reset your Trietix password", { resetToken: resetToken, email: email }, "user/reset-password.hbs")
+      } else {
+        sendMail(email, "Reset your Trietix password - Organizer", { resetToken: resetToken, email: email }, "organizer/reset-passwor.hbs")
+      }
+    } else {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "You don't have an account!")
+    }
+  } catch (error: any){
+    throw new ApiError(httpStatus.FORBIDDEN, error)
+  }
+}
+
+export const resetPassword = async (resetToken: string, password: string) => {
+  try {
+    const resetTokenDoc = await verifyToken(resetToken, tokenTypes.RESET_PASSWORD);
+    let newPassword =  await bcrypt.hash(password, 8)
+    let user = await updateUserById(new mongoose.Types.ObjectId(resetTokenDoc.user), { password: newPassword })
+    if(!user){
+      throw new Error();
+    };
+    await Token.deleteOne({ token: resetToken });
+    const tokens = await generateAuthTokens(user);
+    return { user, tokens };
+  } catch(error: any){
+    throw new ApiError(httpStatus.FORBIDDEN, error)
+  }
+}

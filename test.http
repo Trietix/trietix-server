@@ -1,13 +1,13 @@
-# POST https://trietix-server-2.onrender.com/api/v1/ticket
-POST https://trietix-server-2.onrender.com/api/v1/ticket/webhook/paystack
+POST https://trietix-server-2.onrender.com/api/v1/ticket
+# POST https://trietix-server-2.onrender.com/api/v1/ticket/webhook/paystack
 content-type: application/json
 
 {
-    "email": "abduhameedyakubu123@gmail.com",
-    "ticketId": "T236935350780642",
+    "email": "abazupearl@gmail.com",
+    "ticketId": "T595158323624226",
     "processingFee": 350,
-    "amount": 1,
-    "price": 3850,
+    "amount": 2,
+    "price": 7700,
     "event": "673a408efc49daa2e398253e",
     "isCheckedIn": false,
     "noOfCheckedIn": 0

@@ -12,6 +12,7 @@ export const sendMail = async (
     template: string
 ) => {
     const year = new Date().getFullYear();
+    console.log(email)
     try{
         const transporter = nodemailer.createTransport({
             host: config.email.smtp.host,
@@ -44,6 +45,7 @@ export const sendMail = async (
             subject: subject,
             html: compileTemplate({...payload, year:year}),
         };
+        console.log(message);
 
         await new Promise((resolve, reject) => {
             transporter.sendMail(message, (err: any, info: any)=> {

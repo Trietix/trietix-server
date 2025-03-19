@@ -8,5 +8,7 @@ router.post('/register', validate(authValidation.register), authController.regis
 router.post('/login', validate(authValidation.login), authController.login);
 router.route('/logout').post(auth(), validate(authValidation.logout), authController.logout);
 router.route('/refresh-tokens').post(validate(authValidation.refreshTokens), authController.refreshTokens);
+router.route('/forgot-password').post(validate(authValidation.forgotPassword), authController.forgotPassword);
+router.route('/reset-password').post(validate(authValidation.resetPassword), authController.resetPassword);
 
 export default router;

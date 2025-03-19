@@ -42,11 +42,22 @@ export const paystackWebHook = async (payload: any) => {
     try {
         console.log(payload);
         if(payload.event === "charge.success"){
-            // if(payload.data.recipient.metadata === "")
             let ticket = await ticketModel.findOne({ reference: payload.data.reference });
             if(!ticket){
-                let ticket = await ticketModel.create({...payload.data.metadata, ticketId: payload.data.reference });
-                sendMail("emmanuelomoiya6@gmail.com", `Ticket purchase successful [${payload.data.reference}] - Trietix`, { amount: payload.data.metadata.amount, url:`https://trietix.com/ticket/${payload.data.reference}`}, "user/ticket.hbs");
+                let metadata = payload.data.metadata
+                let data = {
+                    email: metadata.email,
+                    amount: metadata.amount,
+                    ticketId: payload.data.reference,
+                    price: metadata.price,
+                    isCheckedIn: false,
+                    event: metadata.event,
+                    user: '',
+                    processingFee: metadata.processingFee,
+                }
+                let ticket = await ticketModel.create(data);
+                console.log("Ticket created:", ticket)
+                // sendMail("emmanuelomoiya6@gmail.com", `Ticket purchase successful [${payload.data.reference}] - Trietix`, { amount: payload.data.metadata.amount, url:`https://trietix.com/ticket/${payload.data.reference}`}, "user/ticket.hbs");
                 return ticket
             } else {
                 throw(new ApiError(httpStatus.FORBIDDEN, `Not a charge.success event`));
