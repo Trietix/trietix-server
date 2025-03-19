@@ -6,10 +6,10 @@
 // import ApiError from '../errors/ApiError';
 
 // export const sendMail = async (
-//     email: string,
-//     subject: string,
-//     payload: Object,
-//     template: string
+    // email: string,
+    // subject: string,
+    // payload: Object,
+    // template: string
 // ) => {
 //     const year = new Date().getFullYear();
 //     console.log(email)
@@ -76,6 +76,7 @@ import fs from "fs";
 import handlebars from "handlebars";
 import nodemailer from "nodemailer";
 import { google } from "googleapis";
+import config from '../../config/config';
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -84,8 +85,9 @@ const clientsecret = config.email.smtp.client_secret;
 const refreshToken = config.email.smtp.google_refresh_token;
 const user = config.email.smtp.google_user;
 
-export async function sendEmail(to, subject, payload, html, calendar) {
+export async function sendMail(to: string, subject: string, payload: Object, html: string, calendar?: any) {
   try {
+    const year = new Date().getFullYear();
     const myOAuth2Client = new OAuth2(
       clientid,
       clientsecret,
@@ -99,6 +101,7 @@ export async function sendEmail(to, subject, payload, html, calendar) {
     const myAccessToken = myOAuth2Client.getAccessToken();
 
     const transporter = nodemailer.createTransport({
+    // @ts-ignore
       service: "gmail",
       secure: true,
       auth: {
@@ -124,13 +127,13 @@ export async function sendEmail(to, subject, payload, html, calendar) {
     });
 
     const templateDirectory = path.join(process.cwd(), "src/templates");
-    const source = fs.readFileSync(`${templateDirectory}/${template}`, 'utf-8');
+    const source = fs.readFileSync(`${templateDirectory}/${html}`, 'utf-8');
     const compileTemplate = handlebars.compile(String(source));
     const message = {
         from : config.email.from,
-        to: email,
+        to: to,
         subject: subject,
-        html: compileTemplate({...payload, year:year}),
+        html: compileTemplate({...payload, year: year}),
     };
     console.log(message);
 

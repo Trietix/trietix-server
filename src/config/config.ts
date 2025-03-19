@@ -99,10 +99,10 @@ class Config {
     };
     this.email = {
       smtp: {
-        client_id: envVars.GOOGLE_CLIENT_ID;
-        client_secret: envVars.GOOGLE_CLIENT_SECRET;
-        google_refresh_token: envVars.GOOGLE_REFRESH_TOKEN;
-        google_user: envVars.GOOGLE_USER;
+        client_id: envVars.GOOGLE_CLIENT_ID,
+        client_secret: envVars.GOOGLE_CLIENT_SECRET,
+        google_refresh_token: envVars.GOOGLE_REFRESH_TOKEN,
+        google_user: envVars.GOOGLE_USER,
       },
       from: envVars.EMAIL_FROM,
     };
