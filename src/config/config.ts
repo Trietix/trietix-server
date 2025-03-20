@@ -54,6 +54,12 @@ class Config {
   };
   public readonly email: {
     smtp: {
+      host?: string;
+      port?: number;
+      auth: {
+        user?: string;
+        pass?: string;
+      };
       client_id: string;
       client_secret: string;
       google_refresh_token: string;
@@ -99,6 +105,12 @@ class Config {
     };
     this.email = {
       smtp: {
+        host: envVars.SMTP_HOST,
+        port: envVars.SMTP_PORT,
+        auth: {
+          user: envVars.SMTP_USERNAME,
+          pass: envVars.SMTP_PASSWORD,
+        },
         client_id: envVars.GOOGLE_CLIENT_ID,
         client_secret: envVars.GOOGLE_CLIENT_SECRET,
         google_refresh_token: envVars.GOOGLE_REFRESH_TOKEN,

@@ -88,31 +88,41 @@ const user = config.email.smtp.google_user;
 export async function sendMail(to: string | null, subject: string, payload: Object, html: string, blast?: boolean, mails?: string[], calendar?: any) {
   try {
     const year = new Date().getFullYear();
-    const myOAuth2Client = new OAuth2(
-      clientid,
-      clientsecret,
-      "https://developers.google.com/oauthplayground",
-    );
+    // const myOAuth2Client = new OAuth2(
+    //   clientid,
+    //   clientsecret,
+    //   "https://developers.google.com/oauthplayground",
+    // );
 
-    myOAuth2Client.setCredentials({
-      refresh_token: refreshToken,
-    });
+    // myOAuth2Client.setCredentials({
+    //   refresh_token: refreshToken,
+    // });
 
-    const myAccessToken = myOAuth2Client.getAccessToken();
+    // const myAccessToken = myOAuth2Client.getAccessToken();
+
+    // const transporter = nodemailer.createTransport({
+    // // @ts-ignore
+    //   service: "gmail",
+    //   secure: false,
+    //   auth: {
+    //     type: "OAuth2",
+    //     user: user, //your gmail account you used to set the project up in google cloud console"
+    //     clientId: clientid,
+    //     clientSecret: clientsecret,
+    //     refreshToken: refreshToken,
+    //     accessToken: (await myAccessToken).token, //access token variable we defined earlier
+    //   },
+    // });
 
     const transporter = nodemailer.createTransport({
-    // @ts-ignore
-      service: "gmail",
+      host: config.email.smtp.host,
+      port: config.email.smtp.port,
       secure: false,
       auth: {
-        type: "OAuth2",
-        user: user, //your gmail account you used to set the project up in google cloud console"
-        clientId: clientid,
-        clientSecret: clientsecret,
-        refreshToken: refreshToken,
-        accessToken: (await myAccessToken).token, //access token variable we defined earlier
-      },
-    });
+          user: config.email.smtp.auth.user,
+          pass: config.email.smtp.auth.pass,
+      }
+  })
 
     await new Promise((resolve, reject) => {
       transporter.verify((error, success) => {
@@ -192,14 +202,7 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
   }
 }
 
-export const removeDuplicateEmails = (arr: { _id: string; email: string }[]) => {
-  const seenEmails = new Set();
-  return arr.filter((item) => {
-    if (seenEmails.has(item.email)) {
-      return false;
-    } else {
-      seenEmails.add(item.email);
-      return true;
-    }
-  });
+export const removeDuplicateEmails = (data: { _id: string; email: string }[]) => {
+  const uniqueEmails = new Set(data.map(item => item.email));
+  return Array.from(uniqueEmails);
 };

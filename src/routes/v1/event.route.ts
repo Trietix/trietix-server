@@ -42,6 +42,6 @@ router
 
   router
   .route('/:eventId/mail-blast')
-  .get(validate(eventValidation.sendEventMailBlast), eventController.sendEventMailBlast)
+  .post(validate(eventValidation.sendEventMailBlast), eventController.sendEventMailBlast)
 
 export default router;

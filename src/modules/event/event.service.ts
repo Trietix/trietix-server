@@ -30,15 +30,15 @@ export const createEvent = async (eventBody: NewCreatedEvent): Promise<IEventDoc
     return event;
 }
 
-export const sendMailBlast = async (eventId: string) => {
+export const sendMailBlast = async (eventId: string, eventDay: string) => {
     try {
         let event = await eventModel.findById(new mongoose.Types.ObjectId(eventId), 'title image organizer location venue');
         if(event){
             let eventName = event.title;
             let prep_emails = await ticketModel.find({}, 'email');
             let emails = removeDuplicateEmails(prep_emails as any)
-            console.log(emails);
-            await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: "this saturday" }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"])
+            await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"])
+            // await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, emails)
             return { eventName };
         } else {
             throw new ApiError(httpStatus.BAD_REQUEST, "Event not found!")
