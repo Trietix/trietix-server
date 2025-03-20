@@ -15,7 +15,7 @@ cloudinary.config({
 });
 
 export const sendEventMailBlast = catchAsync(async (req: Request, res: Response)=>{
-  let { eventName } = await eventService.sendMailBlast(req.body.eventId)
+  let { eventName } = await eventService.sendMailBlast(req.params["eventId"])
   res.status(httpStatus.OK).send({
     status: "success",
     statusCode: httpStatus.OK,

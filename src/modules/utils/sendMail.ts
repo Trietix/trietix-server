@@ -135,16 +135,17 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
         subject: subject,
         html: compileTemplate({...payload, year: year}),
     };
-    console.log(message);
-    let batchSize = 50;
+     let batchSize = 50;
     if(blast === true){
+      // @ts-ignore
       for (let i = 0; i < mails.length; i += batchSize) {
+        // @ts-ignore
           const batch = mails.slice(i, i + batchSize);
           const message = {
             from : config.email.from,
             to: batch.join(','),
             subject: subject,
-            html: compileTemplate({...payload, year: year}),
+            html: compileTemplate({...payload, year: year }),
           };
           try {
               const info = await new Promise((resolve, reject) => {
@@ -170,6 +171,7 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
         return "All mails sent successfully"
     } else {
       const info = await new Promise((resolve, reject) => {
+        // @ts-ignore
         transporter.sendMail(message, (err, info) => {
           if (err) {
             console.log("Error occurred. " + err?.message);
@@ -189,3 +191,15 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
     return error;
   }
 }
+
+export const removeDuplicateEmails = (arr: { _id: string; email: string }[]) => {
+  const seenEmails = new Set();
+  return arr.filter((item) => {
+    if (seenEmails.has(item.email)) {
+      return false;
+    } else {
+      seenEmails.add(item.email);
+      return true;
+    }
+  });
+};
