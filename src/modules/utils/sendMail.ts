@@ -145,7 +145,7 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
         subject: subject,
         html: compileTemplate({...payload, year: year}),
     };
-     let batchSize = 50;
+     let batchSize = 10;
     if(blast === true){
       // @ts-ignore
       for (let i = startIndex; i < mails.length; i += batchSize) {
