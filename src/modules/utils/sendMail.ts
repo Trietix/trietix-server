@@ -168,6 +168,7 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
                   resolve(info);
                 });
               });
+              // @ts-ignore
               console.log(`Batch ${i / batchSize + 1}: Emails sent successfully to ${batch.length} users.`);
           } catch (error) {
               console.error("Error sending emails:", error);
