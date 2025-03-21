@@ -79,6 +79,12 @@ export const getEvent = {
     }),
 };
 
+export const sendEventMailBlast = {
+    params: Joi.object().keys({
+      eventId: Joi.string().custom(objectId),
+    }),
+};
+
 export const getEventByTitle = {
   params: Joi.object().keys({
     title: Joi.string()

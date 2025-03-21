@@ -14,6 +14,17 @@ cloudinary.config({
   api_secret: Config.cloudinary.apiSecret,
 });
 
+export const sendEventMailBlast = catchAsync(async (req: Request, res: Response)=>{
+  let { eventName } = await eventService.sendMailBlast(req.body.eventId)
+  res.status(httpStatus.OK).send({
+    status: "success",
+    statusCode: httpStatus.OK,
+    data: null,
+    message: `Mail blast sent for ${eventName} event `,
+    error: null
+  })
+})
+
 export const createEvent =  catchAsync(async (req: Request, res: Response) => {
   const photoUrl = await cloudinary.uploader.upload(req.body.image);
     const event = await eventService.createEvent({ ...req.body, image: photoUrl.url });

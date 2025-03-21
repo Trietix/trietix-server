@@ -85,7 +85,7 @@ const clientsecret = config.email.smtp.client_secret;
 const refreshToken = config.email.smtp.google_refresh_token;
 const user = config.email.smtp.google_user;
 
-export async function sendMail(to: string, subject: string, payload: Object, html: string, calendar?: any) {
+export async function sendMail(to: string | null, subject: string, payload: Object, html: string, blast?: boolean, mails?: string[], calendar?: any) {
   try {
     const year = new Date().getFullYear();
     const myOAuth2Client = new OAuth2(
@@ -136,19 +136,54 @@ export async function sendMail(to: string, subject: string, payload: Object, htm
         html: compileTemplate({...payload, year: year}),
     };
     console.log(message);
-
-    const info = await new Promise((resolve, reject) => {
-      transporter.sendMail(message, (err, info) => {
-        if (err) {
-          console.log("Error occurred. " + err?.message);
-          reject(err);
-        }
-        console.log("Email sent successfully to: ", message.to);
-        resolve(info);
+    let batchSize = 50;
+    if(blast === true){
+      for (let i = 0; i < mails.length; i += batchSize) {
+          const batch = mails.slice(i, i + batchSize);
+          const message = {
+            from : config.email.from,
+            to: batch.join(','),
+            subject: subject,
+            html: compileTemplate({...payload, year: year}),
+          };
+          try {
+              const info = await new Promise((resolve, reject) => {
+                transporter.sendMail(message, (err, info) => {
+                  if (err) {
+                    console.log("Error occurred. " + err?.message);
+                    reject(err);
+                  }
+                  console.log("Email sent successfully to: ", message.to);
+                  resolve(info);
+                });
+              });
+              console.log(`Batch ${i / batchSize + 1}: Emails sent successfully to ${batch.length} users.`);
+          } catch (error) {
+              console.error("Error sending emails:", error);
+          }
+  
+          // Delay between batches to prevent rate-limiting
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+  
+        console.log("All emails have been sent.");
+        return "All mails sent successfully"
+    } else {
+      const info = await new Promise((resolve, reject) => {
+        transporter.sendMail(message, (err, info) => {
+          if (err) {
+            console.log("Error occurred. " + err?.message);
+            reject(err);
+          }
+          console.log("Email sent successfully to: ", message.to);
+          resolve(info);
+        });
       });
-    });
+  
+      return info;
+    }
 
-    return info;
+
   } catch (error) {
     console.log(error);
     return error;

@@ -3,6 +3,7 @@ import { ApiError } from '../errors';
 import httpStatus from 'http-status';
 import { NewCreatedEvent, UpdateEventBody, IEventDoc } from './event.interface';
 import { userModel, userService } from '../user';
+import { sendMail } from '../utils/sendMail';
 import { inviteModel } from '../invites';
 import eventModel from './event.model';
 import { ticketModel } from '../ticket';
@@ -27,6 +28,23 @@ export const createEvent = async (eventBody: NewCreatedEvent): Promise<IEventDoc
         await user?.save();
     }
     return event;
+}
+
+export const sendMailBlast = async (eventId: string) => {
+    try {
+        let event = await eventModel.findById(new mongoose.Types.ObjectId(eventId), 'title image organizer location venue');
+        if(event){
+            let eventName = event.title;
+            let emails = await ticketModel.find({}, 'email')
+            console.log(emails);
+            await sendMail("emmanuelomoiya6@gmail.com", "🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️", { eventTitle: event.title, eventPoster: event.image }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"])
+            return { eventName };
+        } else {
+            throw new ApiError(httpStatus.BAD_REQUEST, "Event not found!")
+        }
+    } catch(e: any){
+        throw new ApiError(httpStatus.FORBIDDEN, e)
+    }
 }
 
 /**
