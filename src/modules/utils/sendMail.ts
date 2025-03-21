@@ -145,10 +145,11 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
         subject: subject,
         html: compileTemplate({...payload, year: year}),
     };
-     let batchSize = 10;
+     let batchSize = 50;
     if(blast === true){
       // @ts-ignore
-      for (let i = startIndex; i < mails.length; i += batchSize) {
+      for (let i = startIndex ? startIndex : 0; i < mails.length; i += batchSize) {
+        console.log(`Batch ${i / batchSize + 1} sending ...`)
         // @ts-ignore
           const batch = mails.slice(i, i + batchSize);
           const message = {
