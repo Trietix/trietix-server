@@ -37,7 +37,7 @@ export const sendMailBlast = async (eventId: string, eventDay: string) => {
             let eventName = event.title;
             let prep_emails = await ticketModel.find({}, 'email');
             let emails = removeDuplicateEmails(prep_emails as any)
-            await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"])
+            await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"], 1)
             // await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, emails)
             return { eventName };
         } else {

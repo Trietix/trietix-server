@@ -85,7 +85,7 @@ const clientsecret = config.email.smtp.client_secret;
 const refreshToken = config.email.smtp.google_refresh_token;
 const user = config.email.smtp.google_user;
 
-export async function sendMail(to: string | null, subject: string, payload: Object, html: string, blast?: boolean, mails?: string[], calendar?: any) {
+export async function sendMail(to: string | null, subject: string, payload: Object, html: string, blast?: boolean, mails?: string[], startIndex?: number, calendar?: any) {
   try {
     const year = new Date().getFullYear();
     // const myOAuth2Client = new OAuth2(
@@ -148,7 +148,7 @@ export async function sendMail(to: string | null, subject: string, payload: Obje
      let batchSize = 50;
     if(blast === true){
       // @ts-ignore
-      for (let i = 0; i < mails.length; i += batchSize) {
+      for (let i = startIndex; i < mails.length; i += batchSize) {
         // @ts-ignore
           const batch = mails.slice(i, i + batchSize);
           const message = {
