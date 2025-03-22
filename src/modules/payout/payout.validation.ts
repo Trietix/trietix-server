@@ -14,12 +14,6 @@ export const createPayout = {
 
 export const getPayouts = {
     query: Joi.object().keys({
-      name: Joi.string(),
-      role: Joi.string(),
-      sortBy: Joi.string(),
-      PayoutBy: Joi.string(),
-      limit: Joi.number().integer(),
-      page: Joi.number().integer(),
     }),
 };
 

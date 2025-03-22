@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { ApiError } from '../errors';
+import fs from 'fs';
 import httpStatus from 'http-status';
 import { NewCreatedEvent, UpdateEventBody, IEventDoc } from './event.interface';
 import { userModel, userService } from '../user';
@@ -36,9 +37,11 @@ export const sendMailBlast = async (eventId: string, eventDay: string) => {
         if(event){
             let eventName = event.title;
             let prep_emails = await ticketModel.find({}, 'email');
-            let emails = removeDuplicateEmails(prep_emails as any)
+            // let emails = removeDuplicateEmails(prep_emails as any);
+            // let filePath = 'src/data.json';
+            // await fs.writeFileSync(filePath, emails);
             // await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, ["emmanuelomoiya6@gmail.com", "omoiyaemmanuel@yahoo.com"], 2)
-            await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, emails)
+            // await sendMail("emmanuelomoiya6@gmail.com", `TRIETIX - ${eventName} - 🔥 Don't Miss Out! Get Your Party Ticket Now! 🎟️`, { eventTitle: event.title, eventPoster: event.image, eventLink: `https://trietix.com/events/${event.title.split(" ").join("-")}`, eventDay: eventDay }, "user/mail-blast.hbs", true, emails)
             return { eventName };
         } else {
             throw new ApiError(httpStatus.BAD_REQUEST, "Event not found!")
