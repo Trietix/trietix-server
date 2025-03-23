@@ -61,7 +61,7 @@ export const getAllPayouts = async ():Promise<any> => {
 }
 
 export const getAdminAllPayouts = async (): Promise<any> => {
-    const events = await eventModel.find({ isEnded: false, isCancelled: false }).sort({ createdAt: -1 });
+    const events = await eventModel.find({  }).sort({ createdAt: -1 });
     let payouts = await Promise.all(events.map(async (event: any)=>{
         let organizer = await userModel.findById(event.organizer);
         const tickets = await ticketModel.find({ event: event._id });
