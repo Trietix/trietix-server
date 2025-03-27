@@ -72,6 +72,9 @@ export class Event {
 
     @prop({ required: true, trim: true })
     category: string[] = [''];
+
+    @prop({ type: Boolean, default: false })
+    isEventVerified: boolean = false;
 };
 const eventModel = getModelForClass(Event);
 export default eventModel;

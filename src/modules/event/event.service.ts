@@ -56,7 +56,7 @@ export const sendMailBlast = async (eventId: string, eventDay: string) => {
  * @returns {Promise<IEventDoc | null>}
  */
 export const getEvents = async ():Promise<any> => {
-    const events = await eventModel.find({ isEnded: false, isCancelled: false }).sort({ createdAt: -1 });
+    const events = await eventModel.find({ isEnded: false, isCancelled: false, isEventVerified: true }).sort({ createdAt: -1 });
     if(!events){
         throw new ApiError(httpStatus.NOT_FOUND, 'No event available')
     }
